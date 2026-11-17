@@ -1300,6 +1300,7 @@ var M=[
 ["jadval","جدول متقاطع","Korsord","#2ebd59"],
 ["iran","ایران‌شناسی","Iran på kartan","#e0a800"],
 ["sher","بازی شعر","Diktspelet","#f26b21"],
+["takhte","تخته و شطرنج","Brädspel & schack","#e0301e"],
 ["games","بازی‌های رومیزی","Sällskapsspel","#2a6df4",[["تخته‌نرد","Backgammon"],["شطرنج","Schack"],["ورق‌بازی","Kortspel"]]],
 ["talk","سخنرانی","Föredrag","#8e3ccb"],
 ["film","نمایش فیلم","Filmvisning","#ff7a1a"],
@@ -2554,7 +2555,7 @@ html[lang="sv"] .flower .ltile>button.petal>*{position:relative;top:.1em}
 var F=document.createElement("div");F.className="flower";F.innerHTML='<img src="tasvir/flower-petals.webp" alt="" width="563" height="493">';
 nav.parentNode.insertBefore(F,nav.nextSibling);
 // [کارت، x٪، y٪، زاویهٔ متن در درازای برگ]
-[["poets",63.9,22.7,-79.2],["ava",36.5,22.4,41.6],["jadval",22.6,49.4,-18.6],["iran",35.7,76.9,-80.1],["sher",63,76.7,41.6]].forEach(function(d){var t=document.querySelector('.tile[data-k="'+d[0]+'"]');if(!t)return;
+[["poets",63.9,22.7,-79.2],["ava",36.5,22.4,41.6],["jadval",22.6,49.4,-18.6],["iran",35.7,76.9,-80.1],["sher",63,76.7,41.6],["takhte",77.5,51,-13]].forEach(function(d){var t=document.querySelector('.tile[data-k="'+d[0]+'"]');if(!t)return;
  var src=t.querySelector('[data-fa]'),p=document.createElement("button");p.type="button";p.className="petal";p.appendChild(src.cloneNode(true));p.setAttribute("aria-label",src.textContent);
  t.classList.add("ltile");t.style.setProperty("--x",d[1]+"%");t.style.setProperty("--y",d[2]+"%");t.style.setProperty("--r",d[3]+"deg");
  t.insertBefore(p,t.firstChild);F.appendChild(t);
@@ -2646,5 +2647,6 @@ ruby.hm-gloss rt{font-size:6px;line-height:1;font-weight:400;opacity:.85;letter-
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
 })();
 </script>
+<script>(function(){function go(){if(location.hash==="#p-takhte")location.replace("takhte-shatranj/index.html")}addEventListener("hashchange",go);go()})();</script>
 </body>
 </html>
