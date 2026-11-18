@@ -574,3 +574,49 @@ body { background: var(--bg); color: var(--ink); }
   .chip.on { color: #0e1a22; }
   .muted.err, .status.alert { color: #ff8a80; }
 }
+
+/* ===== کارت تپندهٔ «آغاز بازی» — حال‌وهوای ورزش و جشن ===== */
+@font-face { font-family: 'Lalezar'; src: url('fonts/Lalezar-arabic.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+.game-card .gc-go {
+  position: relative; align-self: flex-start; margin-top: 14px;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 22px 12px 26px; border-radius: 18px;
+  font-family: 'Lalezar', 'Vazirmatn', sans-serif; font-weight: 400; font-size: 1.35rem; line-height: 1.2; letter-spacing: 0;
+  color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.18);
+  background:
+    radial-gradient(circle at 12% 22%, #fff9 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 30% 82%, #ffe066 0 3px, transparent 4px),
+    radial-gradient(circle at 58% 14%, #7cf2c9 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 78% 76%, #fff8 0 2px, transparent 3px),
+    radial-gradient(circle at 92% 30%, #ffd1f0 0 3px, transparent 4px),
+    linear-gradient(90deg, #00a86b 0%, #1e88e5 25%, #ff7a18 50%, #ff2e7e 75%, #00a86b 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 200% 100%;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat-x;
+  box-shadow: 0 6px 18px rgba(255, 90, 60, .35), inset 0 -3px 0 rgba(0,0,0,.15);
+  animation: go-beat 1.5s ease-in-out infinite, go-flow 6s linear infinite;
+  transform-origin: center;
+}
+.game-card .gc-go::before { content: '🏆'; font-size: 1.2rem; text-shadow: none; }
+.game-card .gc-go::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(255, 122, 24, .6);
+  animation: go-ring 1.5s ease-out infinite;
+}
+.game-card.nard .gc-go::before { content: '🎉'; }
+.game-card.nard .gc-go { animation-delay: -.4s, -3s; }
+.game-card:hover .gc-go, .game-card:focus-visible .gc-go { animation-duration: .8s, 6s; }
+.game-card:hover .gc-go::after, .game-card:focus-visible .gc-go::after { animation-duration: .8s; }
+@keyframes go-beat {
+  0%, 40%, 100% { transform: scale(1); }
+  12% { transform: scale(1.09); }
+  24% { transform: scale(.98); }
+  32% { transform: scale(1.05); }
+}
+@keyframes go-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 122, 24, .55); }
+  70%, 100% { box-shadow: 0 0 0 16px rgba(255, 46, 126, 0); }
+}
+@keyframes go-flow { from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; } to { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, -200% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .game-card .gc-go, .game-card .gc-go::after { animation: none; }
+}
