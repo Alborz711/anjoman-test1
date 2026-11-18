@@ -681,6 +681,39 @@ html[dir=ltr] #ava details[open] summary::before{rotate:90deg}
 .coin .f.back{transform:rotateY(180deg) translateZ(calc(var(--t)/2))}
 .coin .r{background:linear-gradient(90deg,#8a5a12,#f7d774 35%,#fff3b0 50%,#d9a432 70%,#7a4a0c)}
 @media (prefers-reduced-motion:reduce){.coin .spin{animation:none}}
+
+/* ===== فوتر لاجوردی ===== */
+footer.ft{--fbg:#1b2147;--fbg2:#141938;--fac:#ffc83d;--flink:#8fd8ec;--ftxt:#d7dcf0;background:var(--fbg);color:var(--ftxt);margin-top:40px;padding:0;text-align:start;font-size:14px}
+.ft-stripe{height:6px;background:linear-gradient(90deg,#7b3fe4 0 20%,#1fae5b 20% 40%,#ff8a1f 40% 60%,#16b5c4 60% 80%,#ec3d8a 80%)}
+.ft-in{max-width:1200px;margin:0 auto;padding:40px 22px 18px}
+.ft-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
+.ft h4{color:#fff;font-size:17px;font-weight:900;margin:0 0 12px;position:relative;padding-bottom:6px}
+.ft h4::after{content:"";position:absolute;inset-inline-start:0;bottom:0;width:28px;height:3px;border-radius:3px;background:var(--fac)}
+.ft ul{list-style:none;margin:0;padding:0}.ft li{margin:5px 0}
+.ft a{color:var(--flink);text-decoration:none;transition:color .2s}.ft a:hover{color:var(--fac)}
+.ft .ft-lbl{color:#fff;font-weight:700;font-size:13.5px;margin-top:10px}
+.ft .ft-val{font-size:13.5px;text-align:start}
+.ft p{margin:0 0 10px;font-size:13.5px;color:var(--ftxt)}
+.ft-row2{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:24px;margin-top:34px;padding-top:28px;border-top:1px solid rgba(255,255,255,.1)}
+.ft .ft-btn{display:inline-block;background:var(--fac);color:#1b2147;font-weight:800;padding:9px 24px;border-radius:12px;transition:transform .2s}
+.ft .ft-btn:hover{color:#1b2147;transform:translateY(-2px)}
+.ft-social{display:flex;gap:9px;flex-wrap:wrap}
+.ft-social a{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.ft-social a:hover{background:var(--fac)}
+.ft-social svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ft-social svg .fill{fill:#fff;stroke:none}.ft-social a:hover svg{stroke:#1b2147}.ft-social a:hover svg .fill{fill:#1b2147}
+.ft-news{display:flex;max-width:380px}
+.ft-news input{flex:1;margin:0;border:0;border-radius:0 12px 12px 0;background:#fff;color:#1b2147;direction:ltr;padding:10px 14px}
+.ft-news button{background:var(--fac);color:#1b2147;border:0;padding:0 18px;border-radius:12px 0 0 12px;font-weight:900;font-size:18px;cursor:pointer}
+html[dir="ltr"] .ft-news input{border-radius:12px 0 0 12px}html[dir="ltr"] .ft-news button{border-radius:0 12px 12px 0}
+.ft-msg{font-size:12.5px;color:var(--fac);margin-top:6px;min-height:1.2em}
+.ft .p1{margin:26px 0 0}.ft .p1src{color:var(--ftxt)}
+.ft-bottom{background:var(--fbg2);padding:14px 22px}
+.ft-in2{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px}
+.ft-logo{color:#fff;font-weight:900;font-size:15px}.ft-in2 .sp{flex:1}
+.ft .admlink{display:inline;margin:0;color:var(--ftxt)}
+@media (max-width:980px){.ft-cols{grid-template-columns:repeat(3,1fr)}.ft-row2{grid-template-columns:1fr 1fr}.ft-row2>div:last-child{grid-column:1/-1}}
+@media (max-width:620px){.ft-cols{grid-template-columns:1fr 1fr}.ft-row2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1041,13 +1074,6 @@ setInterval(function(){if(vis&&!document.hidden&&!playing&&Date.now()-last>18000
 
 </section>
 
-<section id="contact">
- <h2 data-fa="راه‌های تماس" data-sv="Kontakt">راه‌های تماس</h2>
- <div class="grid">
-  <div class="card" style="--c:#00b3a4"><h3 data-fa="تلفن" data-sv="Telefon">تلفن</h3><p style="min-height:1.8em"></p></div>
-  <div class="card" style="--c:#ff3d6e"><h3 data-fa="پست الکترونیکی" data-sv="E-post">پست الکترونیکی</h3><p style="min-height:1.8em"></p></div>
- </div>
-</section>
 </div>
 
 <main id="blank" hidden>
@@ -1082,13 +1108,60 @@ setInterval(function(){if(vis&&!document.hidden&&!playing&&Date.now()-last>18000
  <div id="plist"></div>
 </main>
 
-<footer>
- <div class="p1"><button type="button" id="p1btn" aria-pressed="false"><span class="p1ico" aria-hidden="true">📻</span> <span id="p1lbl" data-fa="پخش زندهٔ رادیو P1" data-sv="Lyssna på P1 live">پخش زندهٔ رادیو P1</span></button>
- <span class="p1src">Sveriges Radio P1</span></div>
- <span data-fa="© ۲۰۲۶ · انجمن ایرانیان سوندبی‌بری · سوندبی‌بری، سوئد" data-sv="© 2026 · Iranska föreningen i Sundbyberg · Sundbyberg, Sverige">© ۲۰۲۶ · انجمن ایرانیان سوندبی‌بری · سوندبی‌بری، سوئد</span>
- <a href="#" id="admlink" class="admlink" hidden>ورود مدیران</a>
-</footer>
+
 </div>
+
+<footer class="ft" id="tamas">
+ <div class="ft-stripe"></div>
+ <div class="ft-in">
+  <div class="ft-cols">
+   <div><h4 data-fa="سرگرمی" data-sv="Nöje">سرگرمی</h4><ul><li><a href="#p-ava" data-fa="آوای کتاب" data-sv="Ljudböcker">آوای کتاب</a></li><li><a href="#p-poets" data-fa="صدای شاعر" data-sv="Poetens röst">صدای شاعر</a></li><li><a href="#p-jadval" data-fa="جدول متقاطع" data-sv="Korsord">جدول متقاطع</a></li><li><a href="#p-iran" data-fa="ایران‌شناسی" data-sv="Iran på kartan">ایران‌شناسی</a></li><li><a href="#p-sher" data-fa="بازی شعر" data-sv="Diktspelet">بازی شعر</a></li><li><a href="#p-takhte" data-fa="تخته و شطرنج" data-sv="Brädspel & schack">تخته و شطرنج</a></li></ul></div>
+   <div><h4 data-fa="برنامه‌ها" data-sv="Program">برنامه‌ها</h4><ul><li><a href="#p-sport" data-fa="ورزش" data-sv="Sport">ورزش</a></li><li><a href="#p-fest" data-fa="جشن‌ها" data-sv="Fester">جشن‌ها</a></li><li><a href="#p-lit" data-fa="شب ادبی" data-sv="Litteraturkväll">شب ادبی</a></li><li><a href="#p-talk" data-fa="سخنرانی" data-sv="Föredrag">سخنرانی</a></li><li><a href="#p-film" data-fa="نمایش فیلم" data-sv="Filmvisning">نمایش فیلم</a></li><li><a href="#p-music" data-fa="موسیقی" data-sv="Musik">موسیقی</a></li></ul></div>
+   <div><h4 data-fa="هموندان" data-sv="Medlemmar">هموندان</h4><ul><li><a href="#p-join" data-fa="برگهٔ هموندی" data-sv="Medlemsansökan">برگهٔ هموندی</a></li><li><a href="#p-events" data-fa="برنامه فعالیت‌ها" data-sv="Aktivitetsprogram">برنامه فعالیت‌ها</a></li><li><a href="#p-news" data-fa="اخبار انجمن" data-sv="Föreningens nyheter">اخبار انجمن</a></li><li><a href="#p-gallery" data-fa="گالری عکس" data-sv="Bildgalleri">گالری عکس</a></li></ul></div>
+   <div><h4 data-fa="انجمن" data-sv="Föreningen">انجمن</h4><ul><li><a href="#p-about-us" data-fa="دربارهٔ انجمن" data-sv="Om föreningen">دربارهٔ انجمن</a></li><li><a href="#p-stadgar-fa" data-fa="بنیادنامه" data-sv="Stadgar">بنیادنامه</a></li><li><a href="#p-about-1" data-fa="هیئت مدیره" data-sv="Styrelsen">هیئت مدیره</a></li><li><a href="#p-about-2" data-fa="پروتکل‌های هیئت مدیره" data-sv="Styrelseprotokoll">پروتکل‌های هیئت مدیره</a></li><li><a href="#p-about-3" data-fa="پروتکل‌های مجمع عمومی" data-sv="Årsmötesprotokoll">پروتکل‌های مجمع عمومی</a></li></ul></div>
+   <div><h4 data-fa="راه‌های تماس" data-sv="Kontakt">راه‌های تماس</h4>
+    <!-- اطلاعات نمونه: تلفن، ایمیل، نشانی و Swish واقعی انجمن را این‌جا بگذارید -->
+    <div class="ft-lbl" data-fa="تلفن" data-sv="Telefon">تلفن</div><div class="ft-val"><a href="tel:+46700000000" dir="ltr">070-000 00 00</a></div>
+    <div class="ft-lbl" data-fa="پست الکترونیکی" data-sv="E-post">پست الکترونیکی</div><div class="ft-val"><a href="mailto:info@anjoman-sundbyberg.se" dir="ltr">info@anjoman-sundbyberg.se</a></div>
+    <div class="ft-lbl" data-fa="نشانی" data-sv="Adress">نشانی</div><div class="ft-val"><span dir="ltr">Sundbyberg</span></div>
+    <div class="ft-lbl">Swish</div><div class="ft-val"><span dir="ltr">123 000 00 00</span></div>
+   </div>
+  </div>
+  <div class="ft-row2">
+   <div><h4 data-fa="برنامه فعالیت‌ها" data-sv="Aktivitetsprogram">برنامه فعالیت‌ها</h4><p data-fa="برنامه‌های پیش رو را ببینید و نام‌نویسی کنید." data-sv="Se kommande program och anmäl dig.">برنامه‌های پیش رو را ببینید و نام‌نویسی کنید.</p><a href="#p-events" class="ft-btn" data-fa="دیدن برنامه‌ها" data-sv="Se programmet">دیدن برنامه‌ها</a></div>
+   <div><h4 data-fa="ما را دنبال کنید" data-sv="Följ oss">ما را دنبال کنید</h4><p data-fa="خبرها را زودتر در شبکه‌ها ببینید." data-sv="Följ våra nyheter i sociala medier.">خبرها را زودتر در شبکه‌ها ببینید.</p>
+    <!-- نشانی صفحه‌های واقعی انجمن را به‌جای # بگذارید -->
+    <div class="ft-social">
+     <a href="#" title="Telegram" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M21 4 3 11l6 2 2 6 3-4 5 4z"/><path d="M9 13l12-9"/></svg></a>
+     <a href="#" title="WhatsApp" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c.5 2.5 2.5 4.5 5 5l1-1.3-1.8-1-1 .8a4 4 0 0 1-1.7-1.7l.8-1-1-1.8z"/></svg></a>
+     <a href="#" title="Instagram" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle class="fill" cx="17.2" cy="6.8" r="1.2"/></svg></a>
+     <a href="#" title="YouTube" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path class="fill" d="M10 9v6l5-3z"/></svg></a>
+     <a href="#" title="Facebook" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14.5 21v-8h3l.5-3.5h-3.5V7.5c0-1 .4-1.7 1.8-1.7H18V2.7A20 20 0 0 0 15.5 2.5c-2.6 0-4.3 1.5-4.3 4.4v2.6H8.5V13h2.7v8"/></svg></a>
+    </div></div>
+   <div><h4 data-fa="خبرنامه" data-sv="Nyhetsbrev">خبرنامه</h4><p data-fa="خبرها و برنامه‌های انجمن را در صندوق نامه‌تان بگیرید." data-sv="Få föreningens nyheter och program i din inkorg.">خبرها و برنامه‌های انجمن را در صندوق نامه‌تان بگیرید.</p>
+    <form class="ft-news" id="ftnews" novalidate><input type="email" name="email" placeholder="you@example.se" aria-label="E-post"><button type="submit" aria-label="ارسال / Skicka">‹</button></form>
+    <div class="ft-msg" id="ftmsg" role="status"></div></div>
+  </div>
+  <div class="p1"><button type="button" id="p1btn" aria-pressed="false"><span class="p1ico" aria-hidden="true">📻</span> <span id="p1lbl" data-fa="پخش زندهٔ رادیو P1" data-sv="Lyssna på P1 live">پخش زندهٔ رادیو P1</span></button>
+  <span class="p1src">Sveriges Radio P1</span></div>
+ </div>
+ <div class="ft-bottom"><div class="ft-in2">
+  <div class="ft-logo" data-fa="انجمن ایرانیان سوندبی‌بری" data-sv="Iranska föreningen i Sundbyberg">انجمن ایرانیان سوندبی‌بری</div>
+  <span class="sp"></span>
+  <span data-fa="© ۲۰۲۶ · سوندبی‌بری، سوئد" data-sv="© 2026 · Sundbyberg, Sverige">© ۲۰۲۶ · سوندبی‌بری، سوئد</span>
+  <a href="#" id="admlink" class="admlink" hidden>ورود مدیران</a>
+ </div></div>
+</footer>
+<script>(function(){
+/* «راه‌های تماس» در منو → رفتن به فوتر */
+function go(){if(location.hash==="#p-contact"){history.replaceState(null,"",location.pathname+location.search);window.dispatchEvent(new HashChangeEvent("hashchange"));setTimeout(function(){document.getElementById("tamas").scrollIntoView({behavior:"smooth"})},450)}}
+addEventListener("hashchange",go);go();
+var f=document.getElementById("ftnews"),m=document.getElementById("ftmsg");
+f.addEventListener("submit",function(e){e.preventDefault();var v=f.email.value.trim(),fa=document.documentElement.lang!=="sv";
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){m.textContent=fa?"لطفاً نشانی درست وارد کنید.":"Ange en giltig e-postadress.";return}
+ m.textContent=fa?"سپاس! خبرنامه به‌زودی راه می‌افتد.":"Tack! Nyhetsbrevet startar snart.";f.reset()});
+})();</script>
+
 
 <dialog id="dlg">
  <form method="dialog" id="f">
@@ -1308,7 +1381,7 @@ var M=[
 ["music","موسیقی","Musik","#2ebd59",[["هم‌آوازان","Körsång"],["موسیقی زنده","Livemusik"]]],
 ["events","برنامه فعالیت‌ها","Aktivitetsprogram","#ff3d6e"],
 ["about","دربارهٔ انجمن","Om föreningen","#8e3ccb",[["بنیادنامه","Stadgar",[["متن سوئدی (PDF)","Svensk text (PDF)","p-stadgar-sv"],["ترجمهٔ فارسی","Persisk översättning","p-stadgar-fa"]]],["هیئت مدیره","Styrelsen"],["پروتکل‌های هیئت مدیره","Styrelseprotokoll"],["پروتکل‌های مجمع عمومی سالانه","Årsmötesprotokoll"]]],
-["contact","راه‌های تماس","Kontakt","#00b3a4",[["تلفن","Telefon"],["پست الکترونیکی","E-post"]]]];
+["contact","راه‌های تماس","Kontakt","#00b3a4"]];
 
 function allLi(m){var id=m[0]==="about"?"p-about-us":"p-"+m[0];PAGES[id]=[m[1],m[2]];return '<li class="all"><a href="#'+id+'" data-fa="'+m[1]+'" data-sv="'+m[2]+'">'+m[1]+'</a></li>'}
 var nav=document.getElementById("menu"),ico;var PJ="data:image/webp;base64,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";ico='<img class="pj" src="'+PJ+'" alt="" width="29" height="44">';
