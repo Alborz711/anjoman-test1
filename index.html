@@ -1415,7 +1415,7 @@ var M=[
 ["talk","سخنرانی","Föredrag","#8e3ccb"],
 ["film","نمایش فیلم","Filmvisning","#ff7a1a"],
 ["gallery","گالری عکس","Bildgalleri","#3f8efc",[["نوروز","Nowruz"],["مهرگان","Mehregan"],["چهارشنبه‌سوری","Chaharshanbe Suri"],["یلدا","Yalda"],["کریسمس","Jul"],["سال نوی میلادی","Nyår"],["گوناگون","Blandat"]]],
-["music","موسیقی","Musik","#2ebd59",[["هم‌آوازان","Körsång"],["موسیقی زنده","Livemusik"],["دستگاه‌های موسیقی ایرانی","Iranska musikmodi",null,"dastgah/index.html"]]],
+["music","موسیقی","Musik","#2ebd59",[["هم‌آوازان","Körsång"],["موسیقی زنده","Livemusik"]]],
 ["events","برنامه فعالیت‌ها","Aktivitetsprogram","#ff3d6e"],
 ["about","دربارهٔ انجمن","Om föreningen","#8e3ccb",[["بنیادنامه","Stadgar",[["متن سوئدی (PDF)","Svensk text (PDF)","p-stadgar-sv"],["ترجمهٔ فارسی","Persisk översättning","p-stadgar-fa"]]],["هیئت مدیره","Styrelsen"],["پروتکل‌های هیئت مدیره","Styrelseprotokoll"],["پروتکل‌های مجمع عمومی سالانه","Årsmötesprotokoll"]]],
 ["contact","راه‌های تماس","Kontakt","#00b3a4"]];
@@ -2714,7 +2714,7 @@ pos();window.addEventListener("resize",pos);
 <audio id="sndau" preload="none"></audio>
 <script>
 (function(){var au=document.getElementById("sndau"),bar=document.getElementById("sndbar"),pp=bar.querySelector(".pp"),cur=null,U={};
-function url(id){return "sedaye-shaer/"+id.replace(/^snd-/,"")+".mp3"}
+function url(id){return window.GD&&window.GD[id]?"goftar-dastgah/"+window.GD[id]:"sedaye-shaer/"+id.replace(/^snd-/,"")+".mp3"}
 function fmt(t){return isFinite(t)?Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"):"0:00"}
 document.querySelectorAll('.tile[data-k=poets] .sub li.grp>span').forEach(function(sp){sp.onclick=function(e){e.stopPropagation();var g=sp.parentNode,o=g.classList.contains("op");g.parentNode.querySelectorAll("li.grp.op").forEach(function(x){x.classList.remove("op")});if(!o)g.classList.add("op")}});
 document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest('a[href^="#snd-"]');if(!a)return;e.preventDefault();e.stopPropagation();
@@ -2729,8 +2729,32 @@ au.ontimeupdate=function(){bar.querySelector(".pg i").style.width=(au.currentTim
 bar.querySelector(".pg").onclick=function(e){if(!au.duration)return;var r=e.currentTarget.getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(document.documentElement.dir==="rtl")x=1-x;au.currentTime=au.duration*x};
 })();
 </script>
+<script>
+/* گلبرگ «دستگاه‌های موسیقی ایرانی» با زیرمنوی گفتارها (مثل گلبرگ صدای شاعر) */
+(function(){
+var G=[["pishgoftar","01-pishgoftar.mp3","پیش‌گفتار","Förord"],
+["shur","02-shur.mp3","دستگاه شور","Dastgah Shur"],["mahur","03-mahur.mp3","دستگاه ماهور","Dastgah Mahur"],["homayun","04-homayun.mp3","دستگاه همایون","Dastgah Homayun"],["segah","05-segah.mp3","دستگاه سه‌گاه","Dastgah Segah"],["chahargah","06-chahargah.mp3","دستگاه چهارگاه","Dastgah Chahargah"],["nava","07-nava.mp3","دستگاه نوا","Dastgah Nava"],["rast-panjgah","08-rast-panjgah.mp3","دستگاه راست‌پنجگاه","Dastgah Rast-Panjgah"],
+["abuata","09-abuata.mp3","آواز ابوعطا","Avaz Abu Ata"],["bayat-tork","10-bayat-tork.mp3","آواز بیات ترک","Avaz Bayat-e Tork"],["afshari","11-afshari.mp3","آواز افشاری","Avaz Afshari"],["dashti","12-dashti.mp3","آواز دشتی","Avaz Dashti"],["bayat-esfahan","13-bayat-esfahan.mp3","آواز بیات اصفهان","Avaz Bayat-e Esfahan"]];
+window.GD={};G.forEach(function(g){window.GD["snd-gd-"+g[0]]=g[1]});
+var old=document.querySelector('.flower.bs-static a.bs-leaf[href="dastgah/index.html"]');if(!old)return;
+var F=old.parentNode,st=old.getAttribute("style")||"";
+function v(n){var m=st.match(new RegExp("--"+n+":\\s*([-\\d.]+)"));return m?parseFloat(m[1]):0}
+var x=v("x"),y=v("y"),r=v("r"),sv=document.documentElement.lang==="sv";
+var FA="دستگاه‌های موسیقی ایرانی",SV="Iranska musikmodi";
+var t=document.createElement("div");t.className="tile ltile";t.setAttribute("data-k","dastgah");t.style.setProperty("--c","#2ebd59");
+t.style.setProperty("--x",x+"%");t.style.setProperty("--y",y+"%");t.style.setProperty("--r",r+"deg");
+function li(href,fa,sv2,poet){return '<li><a href="'+href+'"'+(poet?' data-poet="'+poet+'"':'')+' data-fa="'+fa+'" data-sv="'+sv2+'">'+(sv?sv2:fa)+'</a></li>'}
+t.innerHTML='<button type="button" class="petal wrap" aria-label="'+FA+'"><span data-fa="'+FA+'" data-sv="'+SV+'">'+(sv?SV:FA)+'</span></button><ul class="sub">'+
+ li("dastgah/index.html",FA,SV)+G.map(function(g){return li("#snd-gd-"+g[0],g[2],g[3],FA)}).join("")+'</ul>';
+F.replaceChild(t,old);
+t.querySelector("button").onclick=function(e){e.stopPropagation();var o=t.classList.contains("open");document.querySelectorAll(".tile.open").forEach(function(z){z.classList.remove("open")});if(!o)t.classList.add("open")};
+function pos(){var h=F.offsetHeight,w=F.offsetWidth;t.style.setProperty("--below",(h-y/100*h)+"px");t.style.setProperty("--sl",(w/2-x/100*w)+"px")}
+pos();window.addEventListener("resize",pos);
+})();
+</script>
 <style>
-.tile .sub li:nth-child(6){--pc:#1f9ce0}.tile .sub li:nth-child(7){--pc:#e2572b}.tile .sub li:nth-child(8){--pc:#8a5cf6}.tile .sub li:nth-child(9){--pc:#16a36a}.tile .sub li:nth-child(10){--pc:#94bf12}.tile .sub li:nth-child(11){--pc:#11959b}.tile .sub li:nth-child(12){--pc:#dc3d92}
+.tile .sub li:nth-child(6){--pc:#1f9ce0}.tile .sub li:nth-child(7){--pc:#e2572b}.tile .sub li:nth-child(8){--pc:#8a5cf6}.tile .sub li:nth-child(9){--pc:#16a36a}.tile .sub li:nth-child(10){--pc:#94bf12}.tile .sub li:nth-child(11){--pc:#11959b}.tile .sub li:nth-child(12){--pc:#dc3d92}.tile .sub li:nth-child(13){--pc:#f27a10}
+.flower .ltile>button.petal.wrap{white-space:normal;text-align:center;line-height:1.15;font-size:clamp(10px,3vw,12.5px);padding:0 14px!important}
 body.gal .post-b img{width:calc(33.333% - 8px);aspect-ratio:1;object-fit:cover;margin:4px;border-radius:12px;cursor:zoom-in;vertical-align:top;transition:transform .2s,box-shadow .2s}
 body.gal .post-b img:hover{transform:scale(1.03);box-shadow:0 8px 20px #0003}
 @media (max-width:600px){body.gal .post-b img{width:calc(50% - 8px)}}
