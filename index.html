@@ -2750,6 +2750,20 @@ F.replaceChild(t,old);
 t.querySelector("button").onclick=function(e){e.stopPropagation();var o=t.classList.contains("open");document.querySelectorAll(".tile.open").forEach(function(z){z.classList.remove("open")});if(!o)t.classList.add("open")};
 function pos(){var h=F.offsetHeight,w=F.offsetWidth;t.style.setProperty("--below",(h-y/100*h)+"px");t.style.setProperty("--sl",(w/2-x/100*w)+"px")}
 pos();window.addEventListener("resize",pos);
+/* زیرمنوی فوتر: همان فهرست گلبرگ، از همان دادهٔ G */
+var fa=document.querySelector('footer.ft a[href="dastgah/index.html"]');
+if(fa){
+ var st=document.createElement("style");
+ st.textContent='.ft .ft-dg>a::after{content:"";display:inline-block;margin-inline-start:8px;border:4px solid transparent;border-top-color:currentColor;border-bottom:0;vertical-align:middle;transition:transform .2s}.ft .ft-dg.open>a::after{transform:rotate(180deg)}.ft .ft-dg>ul{display:none;margin:6px 0 4px;padding:0 14px 0 0;list-style:none;border-inline-start:0}.ft .ft-dg.open>ul{display:block}.ft .ft-dg>ul li{position:relative;margin:0 0 4px;padding-inline-start:14px}.ft .ft-dg>ul li::before{content:"";position:absolute;inset-inline-start:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--pc)}.ft .ft-dg>ul a{font-size:.92em}';
+ document.head.appendChild(st);
+ var cols=["#94bf12","#11959b","#6a52cf","#dc3d92","#f27a10","#1f9ce0"];
+ var li=fa.parentNode;li.className="ft-dg";
+ var ul=document.createElement("ul");
+ function fli(href,fa2,sv2,poet,c){return '<li style="--pc:'+c+'"><a href="'+href+'"'+(poet?' data-poet="'+poet+'"':'')+' data-fa="'+fa2+'" data-sv="'+sv2+'">'+(sv?sv2:fa2)+'</a></li>'}
+ ul.innerHTML=fli("dastgah/index.html",FA,SV,"",cols[0])+G.map(function(g,k){return fli("#snd-gd-"+g[0],g[2],g[3],FA,cols[(k+1)%6])}).join("");
+ li.appendChild(ul);fa.setAttribute("aria-expanded","false");
+ fa.addEventListener("click",function(e){e.preventDefault();var o=li.classList.toggle("open");fa.setAttribute("aria-expanded",o?"true":"false")});
+}
 })();
 </script>
 <style>
