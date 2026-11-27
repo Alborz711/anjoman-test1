@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>دانش خود را بیازمایید · Testa din kunskap</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face{font-family:"Vazirmatn";src:url("../takhte-shatranj/fonts/Vazirmatn-wght.woff2") format("woff2");font-weight:100 900;font-display:swap}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;font-family:"Vazirmatn",Tahoma,sans-serif;color:#22303b;background:#eaf1fb;-webkit-tap-highlight-color:transparent;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+.top{position:sticky;top:0;z-index:5;background:#eaf1fbf2;backdrop-filter:blur(6px);border-bottom:1px solid #fff}
+.top .in{max-width:600px;margin:0 auto;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.back{font-size:13px;font-weight:700;color:#22303b;text-decoration:none;padding:4px 12px;border-radius:999px;background:#fffc;border:1px solid #fff;box-shadow:0 2px 6px #00000014}
+.langs{margin-inline-start:auto;display:flex;gap:6px}
+.wrap{max-width:600px;margin:0 auto;padding:16px 12px 48px}
+h1{margin:4px 4px 2px;font-size:27px;line-height:1.5}
+h1 small{display:block;font-size:16px;font-weight:600;color:#566677;direction:ltr;text-align:start;unicode-bidi:isolate}
+.sv{display:block;font-size:.8em;font-weight:500;color:#566677;direction:ltr;text-align:start;unicode-bidi:isolate;line-height:1.5}
+.lead{margin:8px 4px 16px;color:#33424f;font-size:15px;line-height:2}
+.card{background:#ffffffa8;border:1px solid #fff;border-radius:18px;padding:16px 12px 18px;box-shadow:0 8px 24px #3b6ea822;margin-bottom:16px}
+.row{display:flex;align-items:center;gap:10px;margin:0 4px 6px;flex-wrap:wrap}
+.chip{font-size:13px;font-weight:700;padding:3px 14px;border-radius:999px;background:#fff;border:1px solid #ffffffcc;box-shadow:0 2px 6px #00000018}
+.tag{font-size:13px;color:#566677}
+.pts{margin-inline-start:auto;font-size:14px;font-weight:700}
+.bars{display:flex;gap:5px;margin:0 4px 12px}.bars i{flex:1;height:5px;border-radius:3px;background:#d4dfec}.bars i.d{background:#22303b}.bars i.c{background:#94bf12}
+.q{font-size:20px;font-weight:700;line-height:1.8;margin:6px 4px 16px}
+.q .sv{font-size:16px;font-weight:600;margin-top:2px}
+.sub{display:block;width:100%;padding:4px 0;margin:0;list-style:none}
+.sub li{position:relative;margin:0 0 14px}.sub li:last-child{margin:0}
+html[dir=rtl]{--to:left}html[dir=ltr]{--to:right}
+.pill{position:relative;display:block;width:calc(100% - 18px);min-height:60px;padding:8px 20px;padding-inline-start:98px;margin:0;margin-inline-start:18px;text-align:start;cursor:pointer;
+font-family:inherit;color:#22303b;font-weight:700;font-size:17px;line-height:1.6;border-radius:30px;
+background:
+linear-gradient(to var(--to),color-mix(in srgb,var(--pc) 88%,transparent) 0 46px,color-mix(in srgb,var(--pc) 55%,transparent) 80px,transparent 124px) top/100% 30% no-repeat,
+linear-gradient(to var(--to),color-mix(in srgb,var(--pc) 88%,transparent) 0 56px,color-mix(in srgb,var(--pc) 40%,transparent) 100px,transparent 136px) 0 40%/100% 25% no-repeat,
+linear-gradient(to var(--to),color-mix(in srgb,var(--pc) 88%,transparent) 0 42px,color-mix(in srgb,var(--pc) 50%,transparent) 74px,transparent 112px) bottom/100% 40% no-repeat,
+linear-gradient(180deg,#ffffffe6,#ffffffa6);
+border:1px solid #ffffffcc;box-shadow:inset 0 1px 0 #fff,0 3px 10px #00000022;transition:transform .18s,filter .3s}
+.pill::before{content:attr(data-l);position:absolute;top:50%;inset-inline-start:-18px;width:70px;height:70px;margin-top:-35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;text-shadow:0 1px 3px #0005;line-height:1;
+background:radial-gradient(circle at 35% 28%,#ffffffb8 0,#fff0 46%),linear-gradient(150deg,color-mix(in srgb,var(--pc) 70%,#fff),var(--pc) 60%,color-mix(in srgb,var(--pc) 78%,#000));
+border:2px solid #ffffff90;box-shadow:0 4px 12px color-mix(in srgb,var(--pc) 45%,#0003)}
+@media (hover:hover){.pill:hover{transform:translateX(-4px)}html[dir=ltr] .pill:hover{transform:translateX(4px)}}
+.pill:focus-visible{outline:3px solid var(--pc);outline-offset:3px}
+.pill[aria-checked="true"]{box-shadow:inset 0 1px 0 #fff,0 0 0 3px #22303b}
+.pill[aria-checked="true"]::after{content:"\2713";position:absolute;top:6px;inset-inline-end:16px;font-size:20px;font-weight:700;color:#22303b}
+.pill .sv{font-size:14px;font-weight:600;color:#44566a}
+.mini{font:inherit;font-size:14px;font-weight:700;line-height:22px;padding:5px 16px;border-radius:999px;background:#fffc;border:1px solid #ffffffcc;color:#22303b;box-shadow:0 2px 6px #00000014;cursor:pointer;text-align:center}
+.mini[disabled]{opacity:.45;cursor:default}
+.mini.on{background:#22303b;color:#fff;border-color:#22303b}
+.mini.go{background:#22303b;color:#fff;padding:8px 24px;font-size:16px;min-width:120px;border-radius:24px}.nav .mini{min-width:96px;border-radius:24px}
+.mini .sv{color:inherit;opacity:.8;font-size:.78em;text-align:center}
+.nav{display:flex;gap:10px;margin:22px 4px 0;justify-content:space-between;align-items:center}
+.nav .mid{font-size:13px;color:#566677;text-align:center}
+.fld{margin:0 4px 14px}
+.fld label{display:block;font-size:14px;font-weight:700;margin-bottom:4px}
+.fld input[type=text],.fld input[type=email]{width:100%;font:inherit;font-size:16px;padding:11px 14px;border-radius:14px;border:1px solid #c5d3e4;background:#fff}
+.fld .h{font-size:12.5px;color:#566677;margin-top:3px;line-height:1.8}
+.cons{display:flex;gap:10px;align-items:flex-start;margin:0 4px 14px;font-size:13.5px;line-height:1.9}
+.cons input{flex:none;width:22px;height:22px;margin:3px 0 0;accent-color:#22303b}
+.hp{position:absolute;inset-inline-start:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.err{margin:0 4px 12px;padding:10px 14px;border-radius:12px;background:#fde8e8;color:#8a1f1f;font-size:14px;line-height:1.8}
+.okb{margin:0 4px 12px;padding:10px 14px;border-radius:12px;background:#e6f4ea;color:#1b5e35;font-size:14px;line-height:1.8}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:8px 4px 16px}
+.grid button{font:inherit;font-size:12.5px;font-weight:700;padding:6px 0;border-radius:10px;border:1px solid #c5d3e4;background:#fff;cursor:pointer;color:#22303b}
+.grid button.a{background:#22303b;color:#fff;border-color:#22303b}
+.lvl .pill{min-height:78px;font-size:19px}
+.hint{font-size:12.5px;color:#566677;margin:14px 4px 0;line-height:1.9}
+.rules li{margin:6px 0;line-height:2}
+.big{font-size:26px;font-weight:700;margin:4px 4px 8px}
+html[dir=ltr] body{font-family:"Vazirmatn",system-ui,sans-serif}
+html[dir=ltr] .sv{text-align:start}
+</style>
+</head>
+<body>
+<script>
+/* ===== تنظیم مدیر: نشانی وب‌اپ گوگل (Apps Script) را اینجا بگذارید ===== */
+window.QUIZ_ENDPOINT = window.QUIZ_ENDPOINT || "";
+</script>
+<div class="top"><div class="in">
+  <a class="back" id="back" href="../index.html">‹ <span data-bi="back"></span></a>
+  <div class="langs" id="langs"></div>
+</div></div>
+<main class="wrap" id="app"></main>
+<script>
+(function(){
+"use strict";
+var ENDPOINT=window.QUIZ_ENDPOINT||"",WIN=80,STORE="anjoman-quiz-v1";
+var COL=["#94bf12","#11959b","#6a52cf","#dc3d92"];
+var UI={
+ back:["بازگشت","Tillbaka"],
+ title:["دانش خود را بیازمایید","Testa din kunskap"],
+ lead:["مسابقهٔ دوزبانهٔ اطلاعات عمومی؛ ایران و جهان. پرسش‌ها را فارسی و سوئدی می‌بینید، پس هم دانش‌تان را می‌سنجید و هم واژگان سوئدی‌تان را تمرین می‌کنید.","Ett tvåspråkigt allmänbildningsquiz om Iran och världen. Frågorna visas på persiska och svenska, så du kan öva svenska ord medan du testar din kunskap."],
+ lvM:["سطح متوسط","Medelsvår nivå"],lvH:["سطح دشوار","Svår nivå"],lvR:["قوانین و امتیاز","Regler och poäng"],
+ lvMd:["۵۰ پرسش · هر پاسخ ۱ امتیاز","50 frågor · 1 poäng per rätt svar"],lvHd:["۵۰ پرسش · هر پاسخ ۲ امتیاز","50 frågor · 2 poäng per rätt svar"],
+ done:["انجام‌شده","Klart"],
+ formT:["پیش از آغاز","Innan du börjar"],
+ nm:["نام و نام خانوادگی","Namn"],nmh:["برای اعلام برندگان لازم است.","Behövs för att kunna utse vinnare."],
+ ct:["ایمیل یا شمارهٔ تلفن","E-post eller telefonnummer"],cth:["فقط برای تماس با برندگان؛ دیگران آن را نمی‌بینند.","Endast för att kontakta vinnare; visas inte för andra."],
+ cons:["می‌پذیرم که نام و راه تماسم فقط برای این مسابقه نگه‌داری شود و پس از پایان آن پاک شود.","Jag godkänner att mitt namn och min kontaktuppgift sparas enbart för det här quizet och raderas efter att det avslutats."],
+ start:["آغاز","Starta"],
+ errName:["نام را بنویسید (دست‌کم دو حرف).","Skriv ditt namn (minst två tecken)."],
+ errCt:["ایمیل یا شمارهٔ تلفن معتبر بنویسید.","Skriv en giltig e-postadress eller ett telefonnummer."],
+ errCons:["برای ادامه باید موافقت کنید.","Du måste godkänna för att fortsätta."],
+ q:["پرسش","Fråga"],of:["از","av"],
+ prev:["پیشین","Föregående"],next:["پسین","Nästa"],review:["مرور و ارسال","Granska och skicka"],
+ revT:["مرور پاسخ‌ها","Granska dina svar"],
+ revH:["روی شمارهٔ پرسش بزنید تا به آن بازگردید. پاسخ درست پس از پایان مسابقه توسط مدیران بررسی می‌شود و در لحظه دیده نمی‌شود.","Tryck på ett frågenummer för att gå tillbaka. Rätt svar ses inte direkt; arrangörerna rättar efter att quizet har avslutats."],
+ answered:["پاسخ‌داده‌شده","besvarade"],unans:["بی‌پاسخ","obesvarade"],
+ send:["ارسال پاسخ‌ها","Skicka in svaren"],
+ confirm:["پرسش‌های بی‌پاسخ دارید. پس از ارسال دیگر نمی‌توانید تغییر دهید. ادامه می‌دهید؟","Du har obesvarade frågor. Efter inskickning kan du inte ändra. Fortsätta?"],
+ sending:["در حال ارسال…","Skickar…"],
+ thanks:["سپاس! پاسخ‌های شما ثبت شد.","Tack! Dina svar är skickade."],
+ thanksD:["پاسخ درست و امتیاز در لحظه نمایش داده نمی‌شود. هیئت مدیره پس از پایان مسابقه نتیجه و برندگان را اعلام می‌کند.","Rätt svar och poäng visas inte direkt. Styrelsen meddelar resultat och vinnare efter att quizet har avslutats."],
+ test:["(نسخهٔ آزمایشی: پاسخ‌ها هنوز به گوگل شیت وصل نیست و فقط روی همین دستگاه ذخیره شد.)","(Testläge: svaren är inte kopplade till Google Sheets än och sparades bara på den här enheten.)"],
+ again:["بازگشت به سطح‌ها","Tillbaka till nivåerna"],
+ errDup:["از این نام یا راه تماس برای این سطح پیش‌تر پاسخ فرستاده شده است.","Det finns redan en inskickning för den här nivån från samma namn eller kontaktuppgift."],
+ errNet:["ارسال انجام نشد. اینترنت را بررسی کنید و دوباره بکوشید؛ پاسخ‌های شما نگه داشته شده‌اند.","Det gick inte att skicka. Kontrollera anslutningen och försök igen; dina svar är sparade."],
+ errInv:["پاسخ‌ها پذیرفته نشد. صفحه را تازه کنید و دوباره بکوشید.","Svaren godtogs inte. Ladda om sidan och försök igen."],
+ ir:["ایران","Iran"],wd:["جهان","Världen"],
+ rulesT:["قوانین و امتیاز","Regler och poäng"],
+ r1:["دو سطح داریم: متوسط (۵۰ پرسش، هر پاسخ درست ۱ امتیاز) و دشوار (۵۰ پرسش، هر پاسخ درست ۲ امتیاز). بیشینهٔ امتیاز ۵۰ و ۱۰۰ است.","Det finns två nivåer: medelsvår (50 frågor, 1 poäng per rätt svar) och svår (50 frågor, 2 poäng per rätt svar). Maxpoängen är 50 respektive 100."],
+ r2:["هر پرسش چهار گزینه دارد و تنها یکی درست است. پاسخ نادرست امتیاز منفی ندارد.","Varje fråga har fyra svarsalternativ och bara ett är rätt. Fel svar ger inga minuspoäng."],
+ r3:["برنده: هر کس دست‌کم ۸۰٪ پاسخ‌های هر سطح را درست بدهد برندهٔ همان سطح است. برندگان می‌توانند چندتن باشند.","Vinnare: den som har minst 80 % rätt på en nivå vinner den nivån. Det kan finnas flera vinnare."],
+ r4:["هر کس برای هر سطح تنها یک بار می‌تواند پاسخ بفرستد. پاسخ‌ها ارسال که شد، دیگر قابل ویرایش نیست.","Du kan skicka in svar en gång per nivå. När svaren är inskickade går de inte att ändra."],
+ r5:["پاسخ درست در لحظه دیده نمی‌شود؛ پاسخ‌های شما در گوگل شیت انجمن با پاسخ‌نامه سنجیده می‌شود و مدیران برندگان را اعلام می‌کنند.","Rätt svar visas inte direkt. Dina svar jämförs med facit i föreningens Google Sheet och styrelsen utser vinnarna."],
+ r6:["نام و راه تماس فقط برای اعلام برندگان نگه‌داری می‌شود.","Namn och kontaktuppgift sparas enbart för att kunna meddela vinnarna."],
+ lbl:["الف","ب","ج","د"]
+};
+var S={lang:"both",name:"",contact:"",sid:"",consent:false,ans:{medium:{},hard:{}},pos:{medium:0,hard:0},sent:{medium:false,hard:false}};
+try{var raw=JSON.parse(localStorage.getItem(STORE)||"null");if(raw)for(var k in raw)S[k]=raw[k]}catch(e){}
+if(!S.sid){S.sid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2)}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}}
+var DATA=null,APP=document.getElementById("app");
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function bi(a,b){var l=S.lang;if(l==="fa")return esc(a);if(l==="sv")return esc(b);return esc(a)+'<span class="sv" lang="sv" dir="ltr">'+esc(b)+"</span>"}
+function u(k){return bi(UI[k][0],UI[k][1])}
+function plain(k){return S.lang==="sv"?UI[k][1]:UI[k][0]}
+function applyLang(){
+  document.documentElement.dir=S.lang==="sv"?"ltr":"rtl";document.documentElement.lang=S.lang==="sv"?"sv":"fa";
+  var L=document.getElementById("langs");
+  L.innerHTML=[["fa","فارسی"],["sv","Svenska"],["both","هر دو · Båda"]].map(function(x){return '<button type="button" class="mini'+(S.lang===x[0]?" on":"")+'" data-lang="'+x[0]+'">'+x[1]+"</button>"}).join("");
+  document.querySelector("[data-bi=back]").innerHTML=S.lang==="sv"?UI.back[1]:UI.back[0];
+}
+function items(lv){var o=[];DATA.levels[lv].sections.forEach(function(s,si){s.items.forEach(function(it){o.push({it:it,sec:s,si:si})})});return o}
+function lab(i){return S.lang==="fa"?UI.lbl[i]:"ABCD"[i]}
+function route(){
+  var h=location.hash.replace("#","");
+  if(h==="rules")return rules();
+  if(h==="medium"||h==="hard")return begin(h);
+  home();
+}
+function home(){
+  var lv=[["medium","lvM","lvMd","۱","1"],["hard","lvH","lvHd","۲","2"]];
+  var h='<h1>'+esc(UI.title[0])+'<small lang="sv" dir="ltr">'+esc(UI.title[1])+"</small></h1><p class='lead'>"+u("lead")+"</p><div class='card lvl'><ul class='sub'>";
+  lv.forEach(function(x,i){h+='<li><button type="button" class="pill" role="link" data-go="'+x[0]+'" data-l="'+(S.lang==="sv"?x[4]:x[3])+'" style="--pc:'+COL[i+1]+'">'+u(x[1])+'<span style="display:block;font-size:13px;font-weight:600;color:#44566a">'+(S.sent[x[0]]?bi(UI.done[0],UI.done[1]):bi(UI[x[2]][0],UI[x[2]][1]))+"</span></button></li>"});
+  h+='<li><button type="button" class="pill" role="link" data-go="rules" data-l="?" style="--pc:#f27a10">'+u("lvR")+"</button></li></ul></div>";
+  APP.innerHTML=h;
+}
+function rules(){
+  var h='<div class="big">'+u("rulesT")+'</div><div class="card"><ul class="rules">';
+  ["r1","r2","r3","r4","r5","r6"].forEach(function(k){h+="<li>"+u(k)+"</li>"});
+  h+='</ul></div><button class="mini" data-go="home">'+u("again")+"</button>";
+  APP.innerHTML=h;
+}
+var cur=null;
+function begin(lv){
+  cur=lv;
+  if(S.sent[lv])return thanks(false);
+  if(!S.name||!S.contact||!S.consent)return form(lv,"");
+  quiz(lv,S.pos[lv]||0);
+}
+function form(lv,err){
+  var h='<div class="big">'+u("formT")+'</div><form class="card" id="f" novalidate>';
+  if(err)h+='<div class="err" role="alert">'+err+"</div>";
+  h+='<div class="fld"><label for="nm">'+u("nm")+'</label><input id="nm" type="text" autocomplete="name" maxlength="80" value="'+esc(S.name)+'"><div class="h">'+u("nmh")+"</div></div>";
+  h+='<div class="fld"><label for="ct">'+u("ct")+'</label><input id="ct" type="text" inputmode="email" autocomplete="email" maxlength="120" dir="ltr" value="'+esc(S.contact)+'"><div class="h">'+u("cth")+"</div></div>";
+  h+='<div class="hp" aria-hidden="true"><label>Website<input id="website" type="text" tabindex="-1" autocomplete="off"></label></div>';
+  h+='<label class="cons"><input type="checkbox" id="cs"'+(S.consent?" checked":"")+"><span>"+u("cons")+"</span></label>";
+  h+='<div class="nav"><button type="button" class="mini" data-go="home">'+u("again")+'</button><button type="submit" class="mini go">'+u("start")+"</button></div></form>";
+  APP.innerHTML=h;
+  document.getElementById("f").addEventListener("submit",function(e){
+    e.preventDefault();
+    var n=document.getElementById("nm").value.trim().replace(/\s+/g," "),c=document.getElementById("ct").value.trim(),k=document.getElementById("cs").checked;S.hp=!!document.getElementById("website").value;
+    var em=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c),ph=c.replace(/\D/g,"").length>=7&&/^[+\d\s()\-]+$/.test(c);
+    if(n.length<2){S.name=n;S.contact=c;return form(lv,u("errName"))}
+    if(!(em||ph)){S.name=n;S.contact=c;return form(lv,u("errCt"))}
+    if(!k){S.name=n;S.contact=c;return form(lv,u("errCons"))}
+    S.name=n;S.contact=c;S.consent=true;save();quiz(lv,S.pos[lv]||0);
+  });
+}
+function quiz(lv,i){
+  var L=items(lv),n=L.length;if(i<0)i=0;if(i>=n)return reviewV(lv);
+  S.pos[lv]=i;save();
+  var x=L[i],it=x.it,A=S.ans[lv],pts=DATA.levels[lv].points;
+  var secStart=0;for(var j=0;j<x.si;j++)secStart+=DATA.levels[lv].sections[j].items.length;
+  var inSec=i-secStart,bars="";
+  for(var b=0;b<x.sec.items.length;b++){var id=x.sec.items[b].id;bars+='<i class="'+(b===inSec?"c":(A[id]?"d":""))+'"></i>'}
+  var h='<div class="card"><div class="row"><span class="chip">'+(S.lang==="sv"?esc(x.sec.title.sv):esc(x.sec.title.fa))+'</span><span class="tag">'+(S.lang==="sv"?UI[it.r][1]:UI[it.r][0])+'</span><span class="pts">'+(S.lang==="sv"?pts+" p":pts+" امتیاز")+"</span></div>";
+  h+='<div class="bars" aria-hidden="true">'+bars+"</div>";
+  h+='<div class="row" style="margin-bottom:0"><span class="tag">'+plain("q")+" "+(i+1)+" "+plain("of")+" "+n+"</span></div>";
+  h+='<div class="q" id="qq">'+bi(it.q.fa,it.q.sv)+'</div><ul class="sub" role="radiogroup" aria-labelledby="qq">';
+  it.o.forEach(function(o,k){var L1="ABCD"[k];h+='<li><button type="button" class="pill" role="radio" aria-checked="'+(A[it.id]===L1)+'" data-pick="'+L1+'" data-l="'+lab(k)+'" style="--pc:'+COL[k]+'">'+bi(o.fa,o.sv)+"</button></li>"});
+  h+='</ul><div class="nav"><button type="button" class="mini" data-nav="-1"'+(i===0?" disabled":"")+">"+(S.lang==="sv"?"‹ ":"› ")+u("prev")+'</button><span class="mid">'+Object.keys(A).length+"/"+n+'</span><button type="button" class="mini go" data-nav="1">'+(i===n-1?u("review"):u("next")+(S.lang==="sv"?" ›":" ‹"))+"</button></div></div>";
+  h+='<button type="button" class="mini" data-review="1">'+u("review")+"</button>";
+  APP.innerHTML=h;window.scrollTo(0,0);
+}
+function reviewV(lv){
+  var L=items(lv),A=S.ans[lv],c=Object.keys(A).length,n=L.length;
+  var h='<div class="big">'+u("revT")+'</div><div class="card"><div class="row"><span class="chip">'+c+" "+plain("answered")+'</span><span class="chip">'+(n-c)+" "+plain("unans")+"</span></div>";
+  h+='<div class="grid">'+L.map(function(x,i){return '<button type="button" class="'+(A[x.it.id]?"a":"")+'" data-jump="'+i+'">'+(i+1)+"</button>"}).join("")+"</div>";
+  h+='<div class="hint">'+u("revH")+'</div><div id="msg"></div><div class="nav"><button type="button" class="mini" data-nav="-1">'+u("prev")+'</button><button type="button" class="mini go" id="send" data-send="1">'+u("send")+"</button></div></div>";
+  APP.innerHTML=h;window.scrollTo(0,0);
+}
+function thanks(just,test){
+  var h='<div class="card"><div class="big">'+u("thanks")+'</div><p class="lead">'+u("thanksD")+"</p>"+(test?'<div class="okb">'+u("test")+"</div>":"")+'<button class="mini go" data-go="home">'+u("again")+"</button></div>";
+  APP.innerHTML=h;
+}
+function send(lv){
+  var A=S.ans[lv],c=Object.keys(A).length,n=items(lv).length;
+  if(c<n&&!window.confirm(plain("confirm")))return;
+  var btn=document.getElementById("send"),msg=document.getElementById("msg");
+  btn.disabled=true;btn.innerHTML=u("sending");msg.innerHTML="";
+  var hp=S.hp?"x":"";
+  var payload={v:1,level:lv,sid:S.sid,name:S.name,contact:S.contact,lang:S.lang,website:hp,answers:A};
+  function fail(k){btn.disabled=false;btn.innerHTML=u("send");msg.innerHTML='<div class="err" role="alert">'+u(k)+"</div>"}
+  function ok(test){S.sent[lv]=true;S.ans[lv]={};S.pos[lv]=0;save();thanks(true,test)}
+  if(!ENDPOINT){try{var ob=JSON.parse(localStorage.getItem("anjoman-quiz-outbox")||"[]");ob.push(payload);localStorage.setItem("anjoman-quiz-outbox",JSON.stringify(ob))}catch(e){}ok(true);return}
+  fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)})
+   .then(function(r){return r.json()})
+   .then(function(j){if(j&&j.ok)ok(false);else if(j&&j.error==="duplicate"){fail("errDup")}else fail("errInv")})
+   .catch(function(){fail("errNet")});
+}
+document.addEventListener("click",function(e){
+  var t=e.target.closest("button");if(!t)return;
+  if(t.dataset.lang){S.lang=t.dataset.lang;save();applyLang();return refresh()}
+  if(t.dataset.go){var g=t.dataset.go;if(g==="home"){history.replaceState(null,"",location.pathname);return home()}location.hash=g;return}
+  if(t.dataset.pick){var L=items(cur),it=L[S.pos[cur]].it;if(S.ans[cur][it.id]===t.dataset.pick)delete S.ans[cur][it.id];else S.ans[cur][it.id]=t.dataset.pick;save();return quiz(cur,S.pos[cur])}
+  if(t.dataset.nav){var inRev=!!document.getElementById("send");var p=inRev?items(cur).length-1:S.pos[cur]+Number(t.dataset.nav);return quiz(cur,p)}
+  if(t.dataset.review)return reviewV(cur);
+  if(t.dataset.jump)return quiz(cur,Number(t.dataset.jump));
+  if(t.dataset.send)return send(cur);
+});
+function refresh(){
+  if(!DATA)return;
+  var rv=document.getElementById("send"),h=location.hash.replace("#","");
+  if(h==="rules")return rules();
+  if(h==="medium"||h==="hard"){if(S.sent[h])return thanks(false);if(!S.name||!S.contact||!S.consent)return form(h,"");return rv?reviewV(h):quiz(h,S.pos[h]||0)}
+  home();
+}
+window.addEventListener("hashchange",function(){route()});
+applyLang();
+fetch("questions.json",{cache:"no-cache"}).then(function(r){return r.json()}).then(function(d){DATA=d;route()}).catch(function(){APP.innerHTML='<div class="err">questions.json</div>'});
+})();
+</script>
+</body>
+</html>
