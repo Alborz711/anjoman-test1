@@ -2835,5 +2835,27 @@ ruby.hm-gloss rt{font-size:6px;line-height:1;font-weight:400;opacity:.85;letter-
 })();
 </script>
 <script>(function(){function go(){if(location.hash==="#p-takhte")location.replace("takhte-shatranj/index.html")}addEventListener("hashchange",go);go()})();</script>
+<script>
+/* گلبرگ «دانش خود را بیازمایید» با زیرمنوی سطح‌ها */
+(function(){
+var FA="دانش خود را بیازمایید",SV="Testa din kunskap";
+var I=[["quiz/index.html#medium","سطح متوسط","Medelsvår nivå"],["quiz/index.html#hard","سطح دشوار","Svår nivå"],["quiz/index.html#rules","قوانین و امتیاز","Regler och poäng"]];
+var old=null;document.querySelectorAll(".flower.bs-static .bs-leaf").forEach(function(l){var sp=l.querySelector("span[data-fa]");if(sp&&sp.getAttribute("data-fa")==="اطلاعات عمومی")old=l});
+if(!old)return;
+var F=old.parentNode,st=old.getAttribute("style")||"";
+function v(n){var m=st.match(new RegExp("--"+n+":\\s*([-\\d.]+)"));return m?parseFloat(m[1]):0}
+var x=v("x"),y=v("y"),r=v("r"),sv=document.documentElement.lang==="sv";
+var t=document.createElement("div");t.className="tile ltile";t.setAttribute("data-k","quiz");t.style.setProperty("--c","#11959b");
+t.style.setProperty("--x",x+"%");t.style.setProperty("--y",y+"%");t.style.setProperty("--r",r+"deg");
+t.innerHTML='<button type="button" class="petal" aria-label="'+FA+'"><span data-fa="'+FA+'" data-sv="'+SV+'">'+(sv?SV:FA)+'</span></button><ul class="sub">'+I.map(function(g){return '<li><a href="'+g[0]+'" data-fa="'+g[1]+'" data-sv="'+g[2]+'">'+(sv?g[2]:g[1])+'</a></li>'}).join("")+'</ul>';
+F.replaceChild(t,old);
+t.querySelector("button").onclick=function(e){e.stopPropagation();var o=t.classList.contains("open");document.querySelectorAll(".tile.open").forEach(function(z){z.classList.remove("open")});if(!o)t.classList.add("open")};
+function pos(){var h=F.offsetHeight,w=F.offsetWidth;t.style.setProperty("--below",(h-y/100*h)+"px");t.style.setProperty("--sl",(w/2-x/100*w)+"px")}
+pos();window.addEventListener("resize",pos);
+/* فوتر */
+var fl=document.querySelector('footer.ft a[href="dastgah/index.html"]');
+if(fl&&fl.parentNode){var li=document.createElement("li");li.innerHTML='<a href="quiz/index.html" data-fa="'+FA+'" data-sv="'+SV+'">'+(sv?SV:FA)+'</a>';fl.parentNode.parentNode.insertBefore(li,fl.parentNode.nextSibling)}
+})();
+</script>
 </body>
 </html>
