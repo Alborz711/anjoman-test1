@@ -1,0 +1,58 @@
+@font-face{font-family:"Vazirmatn";src:url("../takhte-shatranj/fonts/Vazirmatn-wght.woff2") format("woff2");font-weight:100 900;font-display:swap}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"Vazirmatn",Tahoma,sans-serif;color:#f4efe2;background:#101a3d radial-gradient(ellipse at 50% 30%,#22366f 0,#14204a 55%,#0b1230 100%) fixed;min-height:100%;-webkit-tap-highlight-color:transparent}
+button{font:inherit;cursor:pointer}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#0b1230d9;border-bottom:2px solid #e0a63a}
+.top h1{margin:0;font-size:21px;color:#ffd77a}
+.back{color:#f4efe2;text-decoration:none;font-size:14px;opacity:.9}
+.back:hover{color:#ffd77a}
+.lang{background:transparent;border:1px solid #f4efe255;color:#f4efe2;border-radius:10px;padding:4px 10px;font-size:13px}
+#app{max-width:980px;margin:0 auto;padding:10px 10px 24px}
+
+.panel{background:#0b1230e0;border:1px solid #e0a63a88;border-radius:20px;padding:20px 18px;margin:14px auto;max-width:480px;box-shadow:0 14px 30px #0007}
+.panel h2{margin:0 0 6px;color:#ffd77a;font-size:22px}
+.panel p{margin:6px 0 12px;line-height:1.8;font-size:14.5px;opacity:.92}
+.hero{display:block;width:100%;height:auto;border-radius:14px;margin:0 0 12px;background:#0b1230}
+.field{display:block;margin:10px 0}
+.field>span{display:block;font-size:13px;margin-bottom:5px;opacity:.85}
+.field input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #e0a63a;background:#f8f3e6;color:#1b1b1b;font:inherit;font-size:16px}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+.opts label{flex:1;min-width:90px;position:relative}
+.opts input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;pointer-events:none}
+.opts .o{display:block;text-align:center;padding:9px 6px;border-radius:12px;border:1.5px solid #f4efe244;background:#ffffff0d;font-size:14px;line-height:1.4;cursor:pointer;height:100%}
+.opts .o small{display:block;font-size:11.5px;opacity:.75;font-weight:400}
+.opts input:checked+.o{border-color:#ffc83d;background:#ffc83d22;color:#ffe3a0;font-weight:700}
+.opts input:focus-visible+.o{outline:2px solid #ffc83d}
+.btn{display:block;width:100%;margin:10px 0;padding:12px 16px;border:0;border-radius:14px;background:#ffc83d;color:#14204a;font-weight:800;font-size:16px;box-shadow:0 4px 0 #b88a12}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #b88a12}
+.btn.alt{background:#f4efe2;color:#14204a;box-shadow:0 4px 0 #b9ad93}
+.btn.ghost{background:transparent;color:#f4efe2;border:1.5px solid #f4efe266;box-shadow:none}
+.row{display:flex;gap:8px}.row .btn{flex:1}
+.code{font-size:40px;font-weight:900;letter-spacing:8px;text-align:center;color:#ffd77a;direction:ltr;margin:6px 0}
+.rules{font-size:13.5px;line-height:1.9;opacity:.92;margin-top:8px}
+.rules summary{cursor:pointer;color:#ffd77a;font-weight:700}
+.rules ul{padding-inline-start:18px;margin:6px 0}
+
+/* ---------- game ---------- */
+.game{position:relative;margin:0 auto;user-select:none;-webkit-user-select:none}
+.game canvas{display:block;width:100%;border-radius:16px;touch-action:none;background:#2b3557;box-shadow:0 12px 30px #0008}
+.msg{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);background:#0b1230d9;border:1px solid #e0a63a99;color:#fff;border-radius:14px;padding:8px 16px;font-size:16px;font-weight:700;text-align:center;pointer-events:none;opacity:0;transition:opacity .25s;max-width:86%}
+.msg.on{opacity:1}
+.msg small{display:block;font-weight:400;font-size:12.5px;opacity:.85;margin-top:2px}
+.shotlbl{position:absolute;left:50%;top:70%;transform:translateX(-50%);color:#ffd77a;font-weight:900;font-size:18px;text-shadow:0 2px 6px #000a;pointer-events:none;opacity:0;transition:opacity .3s;direction:ltr}
+.shotlbl.on{opacity:1}
+.bar{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.bar button{border:1.5px solid #f4efe244;background:#ffffff10;color:#f4efe2;border-radius:12px;padding:8px 10px;font-size:13.5px;min-width:44px}
+.bar .spin{display:flex;gap:4px;padding:3px;border-radius:14px;background:#ffffff0a}
+.bar .spin button{direction:ltr}
+.bar .spin button.on{background:#ffc83d;color:#14204a;border-color:#ffc83d;font-weight:800}
+.bar .spin button kbd{font:inherit;font-size:10px;opacity:.6;margin-inline-start:4px}
+.hint{text-align:center;font-size:12.5px;opacity:.7;margin:6px 0 0;line-height:1.7}
+.end{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0b1230aa;border-radius:16px}
+.end .panel{margin:0 14px;text-align:center}
+.end .big{font-size:30px;font-weight:900;color:#ffd77a;margin:6px 0;direction:ltr}
+
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0b1230f0;border:1px solid #e0a63a;color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9;max-width:90%}
+#toast.on{opacity:1}
+@media (max-width:600px){.top h1{font-size:18px}.back{font-size:12.5px}#app{padding:6px 6px 20px}.game canvas{border-radius:12px}}
