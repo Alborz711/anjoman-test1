@@ -827,6 +827,7 @@ function updFx(dt, st) {
   if (o.ringT > 0) { o.ringT -= dt; var k = 1 - o.ringT / 0.9; o.ring.scale.setScalar(1 + k * 1.5); o.ring.material.opacity = 0.8 * (1 - k); }
   var cr = o.crowd, cheer = st ? st.cheer || 0 : 0;
   if (GL.A) { GL.A.crowd.update(GL.t, cheer); return; }
+  if (!CYL()) return;
   if (cheer > 0 || cr.on) {
     cr.on = cheer > 0;
     var m = new THREE.Matrix4(), a = Math.min(1, cheer);
@@ -848,6 +849,8 @@ function setTrail(list) {
 }
 function sizeGL(W, H) { GL.W = W; GL.H = H; GL.r.setSize(W, H, false); GL.cam.aspect = W / H; GL.cam.updateProjectionMatrix(); }
 /* بازیکنان واقعی: ساخت پس از بارگذاری و پیش‌بینی لحظهٔ ضربه برای حرکت دست */
+/* آدمک‌های استوانه‌ای فقط وقتی دیده می‌شوند که بارگذاری بازیکنان واقعی ناموفق باشد */
+function CYL() { return !GL.A && (!window.ATH || ATH.failed); }
 function makeAthletes() {
   var o = GL.o;
   try {
@@ -920,6 +923,7 @@ function render3D(dt, st, mode) {
   /* بازیکنان */
   var me = mode === "hero" ? 0 : ME, prac = !!st.practice, shV = st.st === "rally" || replay || mode === "hero" ? s : null;
   if (!GL.A && window.ATH && ATH.ready) makeAthletes();
+  o.ump.g.visible = o.crowd.bodies.visible = o.crowd.heads.visible = CYL();
   if (GL.A) {
     var tsc = mode === "replay" ? 0.45 * ((st.L && st.L.ts) || 1) : mode === "play" ? ((st.L && st.L.ts) || 1) : 1, adt = dt * tsc;
     var sv = mode === "play" && st.st === "serve" && !st.over ? st.server : -1;
@@ -932,8 +936,8 @@ function render3D(dt, st, mode) {
     if (sv >= 0) { GL.A.players[sv].holdPoint(GL.tmpV); o.sh.position.copy(GL.tmpV); o.sh.quaternion.identity(); o.blob.position.set(GL.tmpV.x, 0.015, GL.tmpV.z); }
     GL.A.ump.look(o.sh.visible ? o.sh.position : null, dt);
   }
-  posePlayer(o.p0, st, 0, p0.x, p0.z, p0.sw || 0, p0.jump || 0, p0.walk || 0, p0.vx || 0, p0.vz || 0, shV, me === 0 && !replay && mode !== "hero" ? 0.82 : 1, !GL.A);
-  posePlayer(o.p1, st, 1, p1.x, p1.z, p1.sw || 0, p1.jump || 0, p1.walk || 0, p1.vx || 0, p1.vz || 0, shV, me === 1 && !replay ? 0.82 : 1, !prac && !GL.A);
+  posePlayer(o.p0, st, 0, p0.x, p0.z, p0.sw || 0, p0.jump || 0, p0.walk || 0, p0.vx || 0, p0.vz || 0, shV, me === 0 && !replay && mode !== "hero" ? 0.82 : 1, CYL());
+  posePlayer(o.p1, st, 1, p1.x, p1.z, p1.sw || 0, p1.jump || 0, p1.walk || 0, p1.vx || 0, p1.vz || 0, shV, me === 1 && !replay ? 0.82 : 1, !prac && CYL());
   o.machine.visible = prac;
   updFx(dt, st);
 
