@@ -1,6 +1,6 @@
 /* بدمینتون انجمن ایرانیان سوندبی‌بری — نسخهٔ سه‌بعدی
    بازی با رایانه (چهار سطح)، تمرین با دستگاه شاتل‌انداز، و بازی آنلاین دونفره (PeerJS)
-   گرافیک: Three.js (lib/three.min.js) */
+   گرافیک: Three.js (از پوشهٔ volleyball/lib) و بازیکنان واقعی از athletes.js */
 (function () {
 "use strict";
 
@@ -24,6 +24,7 @@ fa: {
   lvd: { e: "شاتل آهسته، ضربه خودکار", m: "ضربه‌ها خودکار", h: "کلیر، دراپ، اسمش، درایو", p: "حریف سریع و دقیق" },
   racket: "نوع راکت", def: "دفاعی", defd: "سبک‌سر؛ دسترس و کنترل بیشتر", all: "همه‌جانبه", alld: "متعادل", off: "تهاجمی", offd: "سنگین‌سر؛ اسمش تندتر، خطای بیشتر",
   len: "طول مسابقه", len1: "یک گیم", len3: "بهترین ۳ گیم",
+  loading: "آماده‌سازی بازیکنان", loadFail: "بارگذاری بازیکنان ناموفق بود؛ بازی با آدمک‌های ساده اجرا می‌شود.",
   vsAI: "مسابقه با رایانه", practice: "تمرین با دستگاه شاتل‌انداز", mk: "ساختن اتاق آنلاین", jn: "پیوستن به اتاق", code: "کد اتاق", go: "پیوستن",
   rulesT: "راهنما و قوانین",
   rules: [
@@ -68,6 +69,7 @@ sv: {
   lvd: { e: "Långsam boll, automatiska slag", m: "Automatiska slag", h: "Clear, dropp, smash, drive", p: "Snabb och exakt motståndare" },
   racket: "Racket", def: "Defensiv", defd: "Lätt huvud; längre räckvidd, mer kontroll", all: "Allround", alld: "Balanserad", off: "Offensiv", offd: "Tungt huvud; hårdare smash, fler misstag",
   len: "Matchlängd", len1: "Ett set", len3: "Bäst av 3",
+  loading: "Förbereder spelarna", loadFail: "Spelarna kunde inte laddas; spelet körs med enkla figurer.",
   vsAI: "Match mot datorn", practice: "Träna med bollmaskin", mk: "Skapa onlinerum", jn: "Gå med i rum", code: "Rumskod", go: "Gå med",
   rulesT: "Regler och styrning",
   rules: [
@@ -314,6 +316,7 @@ function chooseShot(p) {
 }
 function hit(p, edge) {
   var s = G.s, side = p === 0 ? 1 : -1, T = RT[G.rts[p]], L = G.L;
+  G.pl[p].hp = [s.x, s.y, s.z];
   var kind = chooseShot(p), sh = SHOT[kind], ang = kind === "smash" ? T.smash : sh.ang;
   var xt = aimFor(p), depth = rnd(sh.d[0], sh.d[1]);
   if (kind === "net" || kind === "drop") xt *= 0.7;
@@ -639,7 +642,18 @@ function buildHall() {
   chair.add(mesh(new THREE.BoxGeometry(0.06, 0.6, 0.6), std(0x1a5440), 0.3, 2.0, 0, true, false));
   var ump = mkPlayer(0x20242e, 0x111111); ump.g.position.set(0, 1.0, 0); ump.g.rotation.y = -Math.PI / 2; ump.g.scale.setScalar(0.95);
   chair.add(ump.g); chair.position.set(CWD + 1.35, 0, 0); sc.add(chair);
-  ump.static = true; poseStatic(ump);
+  ump.static = true; poseStatic(ump); o.ump = ump; o.umpSeat = [CWD + 1.35, 1.75, 0];
+  /* صندلی داوران خط */
+  o.judges = [];
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (q) {
+    var jx = q[0] * (CWD + 0.75), jz = q[1] * (CL + 0.7), jc = new THREE.Group();
+    jc.add(mesh(new THREE.BoxGeometry(0.46, 0.05, 0.44), std(0x1f6b4a), 0, 0.46, 0, true, true));
+    jc.add(mesh(new THREE.BoxGeometry(0.46, 0.46, 0.05), std(0x1a5440), 0, 0.72, -0.2, true, false));
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (l) { jc.add(mesh(new THREE.BoxGeometry(0.035, 0.46, 0.035), cm, l[0] * 0.2, 0.23, l[1] * 0.19, true, false)); });
+    var ry = q[1] < 0 ? 0 : Math.PI;
+    jc.position.set(jx, 0, jz); jc.rotation.y = ry; sc.add(jc);
+    o.judges.push([jx, 0.48, jz, ry]);
+  });
 
   /* شاتل، سایه، دنباله */
   o.sh = mkShuttle(); sc.add(o.sh);
@@ -812,6 +826,7 @@ function updFx(dt, st) {
   o.sparks.forEach(function (s) { if (s.life <= 0) return; s.life -= dt; s.v.y -= 6 * dt; s.m.position.addScaledVector(s.v, dt); s.m.material.opacity = Math.max(0, s.life * 2.2); if (s.life <= 0) s.m.visible = false; });
   if (o.ringT > 0) { o.ringT -= dt; var k = 1 - o.ringT / 0.9; o.ring.scale.setScalar(1 + k * 1.5); o.ring.material.opacity = 0.8 * (1 - k); }
   var cr = o.crowd, cheer = st ? st.cheer || 0 : 0;
+  if (GL.A) { GL.A.crowd.update(GL.t, cheer); return; }
   if (cheer > 0 || cr.on) {
     cr.on = cheer > 0;
     var m = new THREE.Matrix4(), a = Math.min(1, cheer);
@@ -832,6 +847,42 @@ function setTrail(list) {
   }
 }
 function sizeGL(W, H) { GL.W = W; GL.H = H; GL.r.setSize(W, H, false); GL.cam.aspect = W / H; GL.cam.updateProjectionMatrix(); }
+/* بازیکنان واقعی: ساخت پس از بارگذاری و پیش‌بینی لحظهٔ ضربه برای حرکت دست */
+function makeAthletes() {
+  var o = GL.o;
+  try {
+    GL.A = ATH.make({ seats: o.crowd.seats.map(function (p) { var ry = p[2] < -10.5 ? 0 : p[0] < 0 ? Math.PI / 2 : -Math.PI / 2; return [p[0], p[1], p[2], ry]; }), mob: GL.mob, judges: o.judges });
+  } catch (e) { console.error(e); GL.A = null; ATH.ready = false; ATH.failed = true; return; }
+  GL.A.players.forEach(function (A) { GL.scene.add(A.root); });
+  GL.scene.add(GL.A.ump.root);
+  GL.A.ump.place(o.umpSeat[0], o.umpSeat[1], o.umpSeat[2], -Math.PI / 2);
+  o.ump.g.visible = false;
+  GL.scene.add(GL.A.crowd.g); o.crowd.bodies.visible = o.crowd.heads.visible = false;
+  GL.A.judges.forEach(function (j) { GL.scene.add(j); });
+}
+function contactPred(st, p, pl, s, replay) {
+  if (!s || s.y <= 0.02) return null;
+  var side = p === 0 ? 1 : -1, toward = (s.vz || 0) * side > 0.3;
+  if (replay) { if (!toward) return null; }
+  else if (s.hitter === p || (!toward && s.z * side < 0)) return null;
+  var c = { x: s.x, y: s.y, z: s.z, vx: s.vx || 0, vy: s.vy || 0, vz: s.vz || 0 }, dt = 1 / 120;
+  /* بازیکن هم در همین مدت به سوی هدفش می‌دود */
+  var px = pl.x, pz = pl.z, mvx = 0, mvz = 0, md = 0, live = !replay && pl.tx !== undefined && G && G.L;
+  if (live) {
+    var dx = pl.tx - pl.x, dz = pl.tz - pl.z; md = Math.hypot(dx, dz);
+    var spd = MODE === "ai" && p === 1 ? G.L.aiSpd : G.L.pSpd * RT[G.rts[p]].spd;
+    if (md > 1e-3) { mvx = dx / md * spd; mvz = dz / md * spd; }
+  }
+  var R = G && G.rts && !replay ? reachOf(p) : 1.1, top = 2.95, moved = 0;
+  for (var i = 1; i <= 110; i++) {
+    var oz = c.z; step(c, dt);
+    if (md > 0 && moved < md) { var st2 = Math.min(md - moved, Math.hypot(mvx, mvz) * dt); moved += st2; px += mvx / Math.hypot(mvx, mvz) * st2; pz += mvz / Math.hypot(mvx, mvz) * st2; }
+    if (c.y <= 0.05) return null;
+    if (oz * c.z <= 0 && c.y < NET) return null;
+    if (c.z * side > 0.05 && c.y <= top && c.y >= 0.12 && Math.hypot(c.x - px, c.z - pz) <= R) return { tc: i * dt, x: c.x, y: c.y, z: c.z };
+  }
+  return null;
+}
 function playCam(view) {
   var asp = GL.W / GL.H, pos, look, fov;
   if (asp >= 1.05) { pos = [0, 5.4, 12.6]; look = [0, 0.2, -1.4]; fov = 42; }
@@ -868,8 +919,21 @@ function render3D(dt, st, mode) {
   } else bx.visible = false;
   /* بازیکنان */
   var me = mode === "hero" ? 0 : ME, prac = !!st.practice, shV = st.st === "rally" || replay || mode === "hero" ? s : null;
-  posePlayer(o.p0, st, 0, p0.x, p0.z, p0.sw || 0, p0.jump || 0, p0.walk || 0, p0.vx || 0, p0.vz || 0, shV, me === 0 && !replay && mode !== "hero" ? 0.82 : 1, true);
-  posePlayer(o.p1, st, 1, p1.x, p1.z, p1.sw || 0, p1.jump || 0, p1.walk || 0, p1.vx || 0, p1.vz || 0, shV, me === 1 && !replay ? 0.82 : 1, !prac);
+  if (!GL.A && window.ATH && ATH.ready) makeAthletes();
+  if (GL.A) {
+    var tsc = mode === "replay" ? 0.45 * ((st.L && st.L.ts) || 1) : mode === "play" ? ((st.L && st.L.ts) || 1) : 1, adt = dt * tsc;
+    var sv = mode === "play" && st.st === "serve" && !st.over ? st.server : -1;
+    [p0, p1].forEach(function (pl, p) {
+      var A = GL.A.players[p], show = p === 0 || !prac;
+      var pred = (mode === "play" && st.st === "rally") || replay ? contactPred(st, p, pl, s, !!replay) : null;
+      var mood = st.over && st.winner >= 0 && mode === "play" ? (st.winner === p ? "win" : "lose") : null;
+      A.update(adt, { x: pl.x, z: pl.z, sw: pl.sw || 0, show: show, pred: pred, serving: sv === p, hold: sv === p ? GL.tmpV2.set(s.x, s.y, s.z) : null, serveHit: !!(st.s && st.s.serve), mood: mood, hp: !replay && pl.hp ? pl.hp : null });
+    });
+    if (sv >= 0) { GL.A.players[sv].holdPoint(GL.tmpV); o.sh.position.copy(GL.tmpV); o.sh.quaternion.identity(); o.blob.position.set(GL.tmpV.x, 0.015, GL.tmpV.z); }
+    GL.A.ump.look(o.sh.visible ? o.sh.position : null, dt);
+  }
+  posePlayer(o.p0, st, 0, p0.x, p0.z, p0.sw || 0, p0.jump || 0, p0.walk || 0, p0.vx || 0, p0.vz || 0, shV, me === 0 && !replay && mode !== "hero" ? 0.82 : 1, !GL.A);
+  posePlayer(o.p1, st, 1, p1.x, p1.z, p1.sw || 0, p1.jump || 0, p1.walk || 0, p1.vx || 0, p1.vz || 0, shV, me === 1 && !replay ? 0.82 : 1, !prac && !GL.A);
   o.machine.visible = prac;
   updFx(dt, st);
 
@@ -931,7 +995,7 @@ function menu() {
   if (!LV[lvl]) lvl = "m";
   $app.innerHTML = '<div class="panel menu">' +
     '<div class="hero" id="hero"><div class="hero-badge">3D</div></div>' +
-    "<h2>" + t("title") + "</h2><p>" + t("intro") + "</p>" +
+    "<h2>" + t("title") + ' <small class="ldp" id="ldp"></small></h2><p>' + t("intro") + "</p>" +
     '<label class="field"><span>' + t("name") + '</span><input id="nm" maxlength="16" value="' + esc(store("bd-name") || store("pp-name") || "") + '" placeholder="' + t("namePh") + '" autocomplete="nickname"></label>' +
     '<div class="field"><span>' + t("level") + "</span>" + radio("lvl", ["e", "m", "h", "p"].map(function (k) { return [k, t("lv")[k], t("lvd")[k]]; }), lvl) + "</div>" +
     '<div class="field"><span>' + t("racket") + "</span>" + radio("rk", [["def", t("def"), t("defd")], ["all", t("all"), t("alld")], ["off", t("off"), t("offd")]], rk) + "</div>" +
@@ -950,6 +1014,15 @@ function menu() {
   $("jn").onclick = function () { $("jbox").hidden = false; $("jc").focus(); };
   $("jgo").onclick = go(function () { join($("jc").value); });
   $("jc").onkeydown = function (e) { if (e.key === "Enter") $("jgo").click(); };
+  /* تا بازیکنان کامل بارگذاری نشده‌اند، دکمه‌ها غیرفعال‌اند */
+  if (window.ATH) ATH.on(function (pr, ready, failed) {
+    var el = $("ldp"); if (!el) return;
+    var wait = !ready && !failed;
+    ["solo", "prac", "mk", "jn", "jgo"].forEach(function (id) { var b = $(id); if (b) b.disabled = wait; });
+    el.textContent = wait ? t("loading") + " " + num(Math.round(pr * 100)) + "٪" : "";
+    if (LANG === "sv" && wait) el.textContent = t("loading") + " " + Math.round(pr * 100) + " %";
+    if (failed && !el.dataset.f) { el.dataset.f = "1"; toast(t("loadFail")); }
+  });
   if (initGL()) {
     hero = $("hero"); attachGL(hero);
     DEMO = { names: ["Alborz", "Arshad"], sets: [1, 0], pts: [12, 9], setNo: 2, best: 3, server: 0, over: false, st: "rally", cheer: 0, shake: 0,

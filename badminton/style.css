@@ -105,3 +105,4 @@ button{font:inherit;cursor:pointer}
 @media (max-width:600px){.hint{display:none}}
 @media (hover:none){.bar .spin button kbd{display:none}.bar .spin button{padding:7px 9px}}
 @media (prefers-reduced-motion:reduce){.rp i{animation:none}}
+.ldp{font-size:13px;font-weight:700;color:#ffd862;margin-inline-start:6px;white-space:nowrap}
