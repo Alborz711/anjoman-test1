@@ -367,10 +367,10 @@ function loadAssets(onProg) {
 
 /* تکه‌های حرکت: [کلیپ، شروع، پایان، لحظهٔ تماس از شروع] */
 const SEG = {
-  bump: ["swing", 0.0, 0.45, 0.12],
-  set: ["swing", 0.55, 1.3, 0.38],
+  bump: ["swing", 0.0, 0.75, 0.3],
+  set: ["swing", 0.5, 1.35, 0.42],
   jump: ["jump", 0.95, 2.2, 0.6],
-  dig: ["squat", 0.18, 0.7, 0.12],
+  dig: ["squat", 0.1, 0.75, 0.2],
   cheer: ["jump", 1.0, 2.3, 0.55],
   win: ["win", 0.0, 2.6, 0],
   lose: ["lose", 0.3, 3.0, 0],
@@ -449,6 +449,7 @@ class Player {
     const f = this.face(), right = -f, w = A.t < 0.1 ? A.t / 0.1 : A.t > A.dur - 0.15 ? Math.max(0, (A.dur - A.t) / 0.15) : 1;
     if (A.t >= A.dur) { this.arm = null; return; }
     const fw = _v5.set(0, 0, f), up = _v6.set(0, 1, 0), rt = _v7.set(right, 0, 0);
+    if (A.tgt && (A.mode === "bump" || A.mode === "set" || A.mode === "spike" || A.mode === "serve")) { this.armTo(A, w, fw, up, rt); return; }
     if (A.mode === "bump") {
       const d = _v8.copy(fw).multiplyScalar(0.85).addScaledVector(up, -0.55);
       this.aim("RightArm", "RightForeArm", _v9.copy(d).addScaledVector(rt, -0.2), w); this.aim("RightForeArm", "RightHand", _v9.copy(d).addScaledVector(rt, -0.12), w);
@@ -469,7 +470,51 @@ class Player {
       this.aim("LeftArm", "LeftForeArm", _v9.copy(up).addScaledVector(fw, 0.25).addScaledVector(rt, -0.15), w); this.aim("LeftForeArm", "LeftHand", _v9.copy(up).addScaledVector(fw, 0.3), w);
     }
   }
-  handPos(out) { return (this.b.RightHand ? this.b.RightHand.getWorldPosition(out) : out.set(this.x, 2, this.z)); }
+  /* دست‌ها مستقیم به سوی نقطهٔ واقعی توپ */
+  armTo(A, w, fw, up, rt) {
+    const T = A.tgt, sh = new V3(), d = new V3(), e = new V3();
+    if (A.mode === "bump") {
+      for (const sd of [1, -1]) {
+        const arm = sd > 0 ? "RightArm" : "LeftArm", fa = sd > 0 ? "RightForeArm" : "LeftForeArm", hd = sd > 0 ? "RightHand" : "LeftHand";
+        this.b[arm].getWorldPosition(sh);
+        d.copy(T).addScaledVector(rt, sd * 0.05).sub(sh);
+        this.aim(arm, fa, d, w); this.aim(fa, hd, d, w);
+      }
+    } else if (A.mode === "set") {
+      for (const sd of [1, -1]) {
+        const arm = sd > 0 ? "RightArm" : "LeftArm", fa = sd > 0 ? "RightForeArm" : "LeftForeArm", hd = sd > 0 ? "RightHand" : "LeftHand";
+        this.b[arm].getWorldPosition(sh);
+        const h = e.copy(T).addScaledVector(rt, sd * 0.1).addScaledVector(up, -0.13).addScaledVector(fw, -0.06);
+        const elbow = d.copy(sh).lerp(h, 0.5).addScaledVector(rt, sd * 0.2).addScaledVector(up, -0.05);
+        this.aim(arm, fa, d.copy(elbow).sub(sh), w);
+        this.b[fa].getWorldPosition(sh); this.aim(fa, hd, e.copy(h).sub(sh), w);
+      }
+    } else {
+      /* اسپک و سرویس: دست راست عقب و بالا، در لحظهٔ ضربه دقیقاً روی توپ، سپس دنبالهٔ حرکت رو به جلو و پایین */
+      const k = A.t - A.hit;
+      this.b.RightArm.getWorldPosition(sh);
+      const toBall = d.copy(T).sub(sh).normalize().clone();
+      const cock = new V3().copy(up).multiplyScalar(0.6).addScaledVector(fw, -0.55).addScaledVector(rt, 0.35).normalize();
+      let dir, fdir;
+      if (k < -0.32) { dir = cock; fdir = new V3().copy(up).addScaledVector(fw, -0.6).normalize(); }
+      else if (k < 0) { const u = (k + 0.32) / 0.32; dir = cock.clone().lerp(toBall, u * u).normalize(); fdir = new V3().copy(up).addScaledVector(fw, -0.6).normalize().lerp(toBall, u).normalize(); }
+      else { const u = clamp(k / 0.18, 0, 1), fol = new V3().copy(fw).addScaledVector(up, -0.7).addScaledVector(rt, -0.2).normalize(); dir = toBall.clone().lerp(fol, u).normalize(); fdir = dir; }
+      this.aim("RightArm", "RightForeArm", dir, w);
+      this.aim("RightForeArm", "RightHand", fdir, w);
+      this.b.LeftArm.getWorldPosition(sh);
+      const ld = e.copy(T).sub(sh).normalize().addScaledVector(up, 0.3);
+      this.aim("LeftArm", "LeftForeArm", k < 0 ? ld : ld.lerp(new V3().copy(fw).addScaledVector(up, -0.9), clamp(k / 0.2, 0, 1)), w * 0.9);
+    }
+  }
+  handPoint(kind, out) {
+    const L = this.b.LeftHand, R = this.b.RightHand;
+    if (kind === "spike" || kind === "serve") return R.getWorldPosition(out).add(_v6.set(0, 0.06, 0));
+    L.getWorldPosition(_v1); R.getWorldPosition(_v2); out.copy(_v1).add(_v2).multiplyScalar(0.5);
+    if (kind === "bump" || kind === "dig") { this.b.LeftForeArm.getWorldPosition(_v3); this.b.RightForeArm.getWorldPosition(_v4); _v3.add(_v4).multiplyScalar(0.5); out.multiplyScalar(0.72).addScaledVector(_v3, 0.28); out.y -= 0.05; }
+    else out.y += 0.12;
+    return out;
+  }
+
 }
 const _v1 = new V3(), _v2 = new V3(), _v3 = new V3(), _v4 = new V3(), _v5 = new V3(), _v6 = new V3(), _v7 = new V3(), _v8 = new V3(), _v9 = new V3();
 const _q1 = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _q3 = new THREE.Quaternion(), _q4 = new THREE.Quaternion();
@@ -532,9 +577,9 @@ function startServe(aim) {
   if (G.st !== "serve") return;
   const sv = server(), p = PLAYERS[sv], tm = TEAM(sv), s = SIDE[tm];
   G.st = "toss"; G.msg = null;
-  p.play("jump", 1); p.arm = { mode: "serve", t: 0, dur: 1.1, hit: 0.6 };
   G.toss = { t: 0, hit: 0.6, aim: aim || aiAim(tm, true), who: sv };
-  ball.p.set(p.x + 0.2 * -p.face(), 1.5, p.z + p.face() * 0.45); ball.v.set(0, 5.6, p.face() * 0.6); ball.live = true; G.tossing = true;
+  ball.p.set(p.x + 0.25 * -p.face(), 1.5, p.z + p.face() * 0.45); ball.v.set(0, 5.6, p.face() * 0.9); ball.live = true; G.tossing = true;
+  p.play("jump", 1); p.arm = { mode: "serve", t: 0, dur: 1.1, hit: 0.6, tgt: ballAt(ball.p, ball.v, 0.6) };
 }
 function doServeHit() {
   const T = G.toss, p = PLAYERS[T.who], tm = TEAM(T.who), L = G.L;
@@ -543,7 +588,8 @@ function doServeHit() {
   let aim = T.aim.clone();
   const errK = human ? 0.6 * L.myErr : 0.5 + L.err * 4;
   aim.x += rnd(-1, 1) * errK; aim.z += rnd(-1, 1) * errK;
-  const from = new V3(p.x + 0.25 * -p.face(), 2.75, p.z + p.face() * 0.5);
+  const from = p.handPoint("serve", new V3());
+  if (from.distanceTo(ball.p) > 1.2) from.copy(ball.p);
   ball.p.copy(from);
   const spd = human ? 15 : 12 + L.spk * 0.25;
   let tt = from.distanceTo(aim) / spd, sol;
@@ -587,20 +633,20 @@ function aiAim(tm, serve) {
 }
 function aiMoveTo(i, cp, tt, recv) {
   const p = PLAYERS[i], f = p.face();
-  const off = recv ? 0.45 : 0.25;
+  const off = recv ? 0.55 : 0.22;
   p.react = G.clock + (i === 1 ? 0.08 : G.L.react);
   p.goal = { x: cp.x + rnd(-1, 1) * G.L.err * 1.5, z: cp.z - f * off };
 }
 
 /* اجرای ضربه‌ها */
-function touch(i, kind, quality) { 
+function touch(i, kind, quality, anim) {  
   const p = PLAYERS[i], tm = p.team, s = SIDE[tm], L = G.L, human = i === 0;
   if (G.last >= 0 && TEAM(G.last) === tm) G.touches++; else G.touches = 1;
   G.last = i; G.side = tm; G.rally++; G.plan = null;
   const partner = tm * 2 + (i % 2 === 0 ? 1 : 0);
   const err = (human ? (1 - quality) * 1.2 * L.myErr : (Math.random() < L.err ? 1 : 0) * rnd(0.8, 2.2));
   if (kind === "bump" || kind === "dig") {
-    p.play(kind === "dig" ? "dig" : "bump", 1.2); p.arm = { mode: "bump", t: 0, dur: 0.5 };
+    if (!anim) { p.play(kind === "dig" ? "dig" : "bump", 1.2); p.arm = { mode: "bump", t: 0.3, dur: 0.6 }; }
     sfx("bump"); puff(ball.p, 0.3);
     if (G.touches >= 3) return sendOver(i, false);
     const P2 = PLAYERS[partner];
@@ -612,16 +658,16 @@ function touch(i, kind, quality) {
     if (partner !== 0) aiMoveTo(partner, q, sol.T, false);
     planAttackerApproach(i, sol.T);
   } else if (kind === "set") {
-    p.play("set", 1.1); p.arm = { mode: "set", t: 0, dur: 0.6 };
+    if (!anim) { p.play("set", 1.1); p.arm = { mode: "set", t: 0.4, dur: 0.75 }; }
     sfx("set");
     if (G.touches >= 3) return sendOver(i, false);
     const A = PLAYERS[partner];
     const ax = clamp(A.x * 0.8 + rnd(-0.3, 0.3), -3, 3), az = s * 0.9;
-    const q = new V3(ax + rnd(-1, 1) * err * 0.6, 2.95, az + rnd(-0.3, 0.3) * err * s);
+    const q = new V3(ax + rnd(-1, 1) * err * 0.6, 2.6, az + rnd(-0.3, 0.3) * err * s);
     const sol = launchApex(ball.p, q, 4.6 + rnd(-0.3, 0.3));
     ball.v.copy(sol.v);
     G.attack = { who: partner, cp: q, tHit: G.clock + sol.T, jumped: false, team: tm };
-    G.plan = { who: partner, kind: "attack", cp: q, tEnd: G.clock + sol.T, h: 2.95 };
+    G.plan = { who: partner, kind: "attack", cp: q, tEnd: G.clock + sol.T, h: 2.6 };
     const ap = PLAYERS[partner]; ap.goal = { x: q.x - 0.25 * -ap.face(), z: q.z - ap.face() * 1.6 }; ap.react = G.clock;
     planBlock(1 - tm, q);
   }
@@ -639,7 +685,7 @@ function planBlock(tm, q) {
   if (df.i !== 0) { df.goal = { x: -q.x * 0.5, z: SIDE[tm] * 5.2 }; df.react = G.clock + G.L.react; }
 }
 /* حملهٔ نهایی: اسپک یا ضربهٔ آرام */
-function doAttack(i, aim, quality, spike) { 
+function doAttack(i, aim, quality, spike) {  
   const p = PLAYERS[i], tm = p.team, L = G.L, human = i === 0;
   p.arm = { mode: "spike", t: p.arm && p.arm.mode === "spike" ? p.arm.t : 0.45, dur: 0.75, hit: 0.45 };
   G.attack = null; G.plan = null;
@@ -710,12 +756,12 @@ function feed() {
   setter.x = setter.tx = 0.3; setter.z = setter.tz = 1.6;
   me.goal = null;
   ball.p.set(0.3, 2.1, 1.75); ball.live = true;
-  const q = new V3(clamp(me.x, -2.5, 2.5) * 0.6 + rnd(-0.4, 0.4), 2.95, 0.9);
+  const q = new V3(clamp(me.x, -2.5, 2.5) * 0.6 + rnd(-0.4, 0.4), 2.6, 0.9);
   const sol = launchApex(ball.p, q, 4.4); ball.v.copy(sol.v);
-  setter.play("set", 1.1); setter.arm = { mode: "set", t: 0, dur: 0.6 }; sfx("set");
+  setter.play("set", 1.1); setter.arm = { mode: "set", t: 0.4, dur: 0.75, tgt: ball.p.clone() }; sfx("set");
   G.st = "rally"; G.last = 1; G.side = 0; G.touches = 1; G.msg = null;
   G.attack = { who: 0, cp: q, tHit: G.clock + sol.T, jumped: false, team: 0 };
-  G.plan = { who: 0, kind: "attack", cp: q, tEnd: G.clock + sol.T, h: 2.95 };
+  G.plan = { who: 0, kind: "attack", cp: q, tEnd: G.clock + sol.T, h: 2.6 };
   me.goal = { x: q.x - 0.25, z: q.z + 1.6 }; me.react = G.clock;
   G.prTarget = new V3(rnd(-2.8, 2.8), BR, -rnd(3, 7));
 }
@@ -802,14 +848,17 @@ function checkTouches() {
   const A = G.attack;
   if (A) {
     const p = PLAYERS[A.who], human = A.who === 0, tTo = A.tHit - G.clock;
-    if (!A.jumped && !human && tTo <= SEG.jump[3] + 0.02) { p.play("jump", 1); p.arm = { mode: "spike", t: 0, dur: 1.0, hit: SEG.jump[3] }; A.jumped = true; }
+    if (!A.jumped && !human && tTo <= SEG.jump[3] + 0.02) { p.play("jump", 1); p.arm = { mode: "spike", t: 0, dur: 1.0, hit: SEG.jump[3], tgt: A.cp.clone() }; A.jumped = true; }
+    if (!A.jumped && human && tTo <= SEG.jump[3] - 0.12) { A.jumped = true; A.auto = true; p.play("jump", 1); p.arm = { mode: "spike", t: 0.12, dur: 1.0, hit: SEG.jump[3], tgt: A.cp.clone() }; }
+    if (A.jumped && tTo < 0.1 && tTo > 0) { p.handPoint("spike", _v8); ball.p.lerp(_v8, 0.06); }
     if (tTo <= SEG.jump[3] + 0.25 && !A.run) { A.run = true; p.goal = { x: A.cp.x + 0.25 * p.face(), z: A.cp.z - p.face() * 0.35 }; p.react = 0; }
     const B = G.block;
     if (B && B.who !== 0 && B.tm !== A.team && !B.jumped && PLAYERS[B.who].willBlock && G.clock >= A.tHit - 0.45) { B.jumped = true; const bp = PLAYERS[B.who]; bp.play("jump", 1); bp.arm = { mode: "block", t: 0, dur: 1.0 }; }
     if (tTo <= 0) {
-      const dist = Math.hypot(ball.p.x - p.x, ball.p.z - p.z);
+      const hp = p.handPoint("spike", _v8), dist = ball.p.distanceTo(hp);
+      if (dist < 1.3) ball.p.copy(hp);
       if (human) {
-        if (A.jumped && G.tapT !== null) {
+        if (A.jumped && G.tapT !== null && !A.auto) {
           const e = Math.abs(G.tapT - (A.tHit - SEG.jump[3]));
           const q = clamp(1 - e / 0.4, 0, 1);
           showLbl(e < 0.1 ? "perfect" : G.tapT < A.tHit - SEG.jump[3] ? "early" : "late");
@@ -817,7 +866,7 @@ function checkTouches() {
         } else { doAttack(0, G.aimP || aiAim(0, false), 0.4, false); }
         G.tapT = null; G.aimP = null; return;
       }
-      if (dist < 1.9) { doAttack(A.who, null, 1, Math.random() < 0.8 || G.lvl === "p"); return; }
+      if (dist < 1.3) { doAttack(A.who, null, 1, Math.random() < 0.8 || G.lvl === "p"); return; }
       G.attack = null;
     }
     return;
@@ -825,14 +874,27 @@ function checkTouches() {
   const P = G.plan; if (!P || P.kind === "attack") return;
   const p = PLAYERS[P.who];
   if (P.leave && ball.p.y < 2) return;
-  /* وقتی توپ به ارتفاع تماس رسید */
-  if (ball.v.y < 0 && ball.p.y <= P.h + 0.15) {
-    const fx = p.x + 0.1 * -p.face(), fz = p.z + p.face() * (P.kind === "set" ? 0.2 : 0.45);
-    const d = Math.hypot(ball.p.x - fx, ball.p.z - fz);
-    const reach = P.who === 0 ? G.L.reach : (P.who === 1 ? 1.25 : 1.3);
-    if (d <= reach) { touch(P.who, P.kind, clamp(1 - d / reach, 0, 1)); return; }
+  const segK = P.kind === "set" ? "set" : P.kind === "dig" ? "dig" : "bump", spd = P.kind === "set" ? 1.1 : 1.2;
+  const tc = ball.v.y < 0 || ball.p.y > P.h ? timeToY(ball.p, ball.v, P.h) : 0;
+  const f = p.face(), ideal = { x: P.cp.x, z: P.cp.z - f * (P.kind === "set" ? 0.22 : 0.55) };
+  const reach = P.who === 0 ? G.L.reach : (P.who === 1 ? 1.25 : 1.3);
+  const dIdeal = Math.hypot(p.x - ideal.x, p.z - ideal.z);
+  /* کمک جای‌گیری: وقتی نزدیک است، بازیکن خودش را دقیق زیر توپ می‌برد */
+  if (tc !== null && tc < 0.75 && dIdeal < reach) { p.tx = ideal.x; p.tz = ideal.z; }
+  /* شروع حرکت پیش از رسیدن توپ تا لحظهٔ تماس دقیقاً با رسیدن توپ یکی شود */
+  if (!P.anim && tc !== null && tc <= SEG[segK][3] / spd && dIdeal < reach + 0.3) {
+    P.anim = true; p.play(segK, spd);
+    p.arm = { mode: segK === "set" ? "set" : "bump", t: 0, dur: (SEG[segK][2] - SEG[segK][1]) / spd, tgt: new V3(P.cp.x, P.h, P.cp.z) };
+  }
+  if (P.anim && tc !== null && tc < 0.08) { p.handPoint(P.kind, _v8); ball.p.lerp(_v8, 0.08); }
+  if (ball.v.y < 0 && ball.p.y <= P.h + 0.03) {
+    if (P.anim) {
+      const hp = p.handPoint(P.kind, _v8), d = ball.p.distanceTo(hp);
+      if (d <= 0.9) { ball.p.copy(hp); touch(P.who, P.kind, clamp(1 - dIdeal / reach, 0, 1), true); return; }
+    }
     if (ball.p.y < P.h - 0.5) { G.plan = null; }
   }
+
 }
 function updAim() {
   const o = GL.o, P = G.plan;
@@ -856,6 +918,7 @@ function simulate(dtR) {
     if (sv !== 0 && !G.practice) { G.ai.srvT += dtR; if (G.ai.srvT > 1.4) startServe(null); }
   } else if (G.st === "toss") {
     G.toss.t += dt; ball.v.y -= GRAV * dt; ball.p.addScaledVector(ball.v, dt);
+    if (G.toss.hit - G.toss.t < 0.1) { PLAYERS[G.toss.who].handPoint("serve", _v8); ball.p.lerp(_v8, 0.25); }
     if (G.toss.t >= G.toss.hit) doServeHit();
   } else if (G.st === "rally") {
     const n = Math.ceil(dt / (1 / 240)), h = dt / n;
@@ -933,7 +996,7 @@ function humanTap(world) {
     G.attack.jumped = true; G.tapT = G.clock;
     G.aimP = world && world.z < -0.3 ? new V3(clamp(world.x, -CW - 0.5, CW + 0.5), BR, clamp(world.z, -CL - 0.5, -0.8)) : null;
     if (G.aimP) { G.aimShow = G.aimP.clone(); setTimeout(() => { if (G) G.aimShow = null; }, 1100); }
-    me.play("jump", 1); me.arm = { mode: "spike", t: 0, dur: 1.0, hit: SEG.jump[3] };
+    me.play("jump", 1); me.arm = { mode: "spike", t: 0, dur: 1.0, hit: SEG.jump[3], tgt: G.attack.cp.clone() };
     return;
   }
   if (G.block && G.block.who === 0 && !G.block.jumped && Math.abs(me.z) < 2.4) {
@@ -1201,6 +1264,7 @@ function showEnd() {
 }
 function leave() { stopLoop(); G = null; MODE = null; menu(); }
 document.addEventListener("visibilitychange", () => { if (document.hidden && G && G.st !== "over") { G.paused = true; buildBar(); surf(false); } });
+
 
 
 setLang(LANG);
