@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>معمای تصویری</title>
+
+<style>
+@font-face{font-family:"Vazirmatn";src:url("../takhte-shatranj/fonts/Vazirmatn-wght.woff2") format("woff2");font-weight:100 900;font-display:swap}
+/* VOICE: شاد و خانوادگی، مثل بازی‌های روزنامهٔ آخر هفته
+   IDEA: صفحهٔ «تفاوت‌ها را پیدا کنید» در یک قاب کاشی لاجوردی
+   PICTURE: خود جفت تصویر، بزرگ و بالای صفحه
+   COLOUR and TYPE: لاجوردی تیره، طلایی، سبز/نارنجی/قرمز برای سطح‌ها؛ وزیرمتن
+   LAYOUT: فهرست مراحل در سه نوار سطح؛ صفحهٔ بازی: نوار وضعیت، دو تصویر، نتیجه */
+:root{color-scheme:light dark;--bg:light-dark(#f4efe3,#0f1430);--card:light-dark(#fffaf0,#18204a);--ink:light-dark(#1c2150,#f3ecd9);--mute:light-dark(#5b6086,#b5b3c9);--navy:#1f2a6b;--gold:#e9b949;--easy:#2f9e44;--mid:#f08c00;--hard:#d6336c;--ok:#2f9e44;--bad:#e03131;--line:light-dark(#e2d8c0,#2b3468)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Vazirmatn,Tahoma,sans-serif;overflow-x:clip}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;min-height:44px;padding:8px 18px;font-weight:600}
+button:focus-visible,a:focus-visible,.lv:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+header{background:var(--navy);color:#fff;padding:22px max(5vw,16px) 26px;background-image:radial-gradient(circle at 12% 120%,#2d3c94 0 30%,transparent 31%),radial-gradient(circle at 92% -30%,#2d3c94 0 25%,transparent 26%)}
+.hin{max-width:1240px;margin:auto;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+h1{margin:0;font-size:clamp(28px,4.5vw,46px);line-height:1.1;font-weight:800}
+h1 b{color:var(--gold);font-weight:800}
+header p{margin:6px 0 0;color:#d7dbf5}
+.tot{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:8px 16px;text-align:center}
+.tot strong{display:block;font-size:26px;color:var(--gold);line-height:1.2}
+.back{color:#d7dbf5;font-size:14px}
+main{max-width:1240px;margin:auto;padding:24px max(4vw,12px) 48px}
+.how{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 18px;margin-bottom:22px;color:var(--mute)}
+.how b{color:var(--ink)}
+.band{margin-bottom:28px}
+.bh{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:20px}
+.pill{color:#fff;border-radius:999px;padding:2px 14px;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.lv{background:var(--card);border:2px solid var(--line);border-radius:16px;overflow:hidden;text-align:start;padding:0;color:var(--ink);display:flex;flex-direction:column;transition:transform .15s}
+.lv:hover{transform:translateY(-3px)}
+.lv img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.lv .cap{padding:8px 12px 10px;display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:14px}
+.num{width:30px;height:30px;border-radius:50%;color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.lv .st{font-size:13px;color:var(--mute);white-space:nowrap}
+.lv.done{border-color:var(--ok)}
+.lv.done .st{color:var(--ok);font-weight:600}
+/* game */
+#game{display:none}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.bar h2{margin:0;font-size:clamp(20px,3vw,28px);line-height:1.2}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 14px;font-weight:600;white-space:nowrap}
+.chip.warn{color:var(--bad);border-color:var(--bad)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.pair{gap:6px}.pic{border-width:2px;border-radius:10px}figcaption{font-size:12px}main{padding-inline:6px}.mk .n{width:18px;height:18px;font-size:11px;top:-8px;left:-8px}.mk.ok,.mk.miss{border-width:3px}}
+figure{margin:0}
+figcaption{font-size:14px;color:var(--mute);margin-bottom:4px}
+.pic{position:relative;border-radius:14px;overflow:hidden;border:3px solid var(--navy);cursor:crosshair;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.pic img{display:block;width:100%;height:auto;pointer-events:none}
+.mk{position:absolute;border-radius:50%;transform:translate(50%,-50%);pointer-events:none}
+.mk.ok{border:4px solid var(--ok);box-shadow:0 0 0 2px #fff,0 0 12px rgba(0,0,0,.4);animation:pop .35s}
+.mk.miss{border:4px dashed var(--mid);box-shadow:0 0 0 2px #fff;animation:pop .35s}
+.mk.hint{border:4px solid var(--gold);animation:blink .5s 4}
+.mk .n{position:absolute;top:-12px;left:-12px;width:24px;height:24px;border-radius:50%;background:inherit;color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center}
+.mk.ok .n{background:var(--ok)}.mk.miss .n{background:var(--mid)}
+.x{position:absolute;width:34px;height:34px;transform:translate(50%,-50%);pointer-events:none;color:var(--bad);font-size:34px;font-weight:800;line-height:34px;text-align:center;text-shadow:0 0 4px #fff;animation:fade 0.9s forwards}
+@keyframes pop{from{transform:translate(50%,-50%) scale(.3);opacity:0}}
+@keyframes blink{50%{opacity:.2}}
+@keyframes fade{to{opacity:0;transform:translate(50%,-80%)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.pri{background:var(--navy);color:#fff}
+.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.gold{background:var(--gold);color:#1c2150}
+.toast{min-height:28px;margin-top:10px;font-weight:600}
+.toast.ok{color:var(--ok)}.toast.bad{color:var(--bad)}
+#result{display:none;margin-top:18px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:18px 20px}
+#result h3{margin:0 0 4px;font-size:24px}
+#result ol{margin:12px 0;padding-inline-start:0;list-style:none;display:grid;gap:8px}
+#result li{display:flex;gap:10px;align-items:flex-start}
+.tag{flex:none;border-radius:8px;padding:0 10px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
+.tag.ok{background:var(--ok)}.tag.miss{background:var(--mid)}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:0 16px 30px}
+</style>
+</head>
+<body>
+<header><div class="hin">
+  <div><a class="back" id="back" href="../index.html">بازگشت به سایت انجمن</a>
+  <h1>معمای تصویری؛ <b>تفاوت‌ها را پیدا کنید!</b></h1>
+  <p>۲۰ مرحله با حال‌وهوای ایران؛ در هر مرحله ۵ تفاوت پنهان است.</p></div>
+  <div class="tot">امتیاز کل شما<strong id="total">۰</strong><span id="doneN" style="font-size:13px"></span></div>
+</div></header>
+
+<main>
+<section id="menu">
+  <div class="how"><b>چگونه بازی کنیم؟</b> یک مرحله را انتخاب کنید و روی جایی از هر کدام از دو تصویر که با دیگری فرق دارد بزنید. اگر درست باشد دور آن دایرهٔ سبز می‌افتد و اگر اشتباه باشد ضربدر قرمز می‌بینید. هر تفاوت <b>۱۰ امتیاز</b> دارد و هر کلیک اشتباه <b>۲ امتیاز</b> کم می‌کند. در پایان، همهٔ پاسخ‌ها نشان داده می‌شوند تا ببینید کدام‌ها را درست پیدا کرده‌اید.</div>
+  <div id="bands"></div>
+</section>
+
+<section id="game" aria-live="polite">
+  <div class="bar">
+    <h2 id="gTitle"></h2>
+    <div class="stats"><span class="chip" id="cFound"></span><span class="chip" id="cTime"></span><span class="chip" id="cScore"></span></div>
+  </div>
+  <div class="pair">
+    <figure><figcaption>تصویر اول</figcaption><div class="pic" id="picA"><img id="imgA" alt="تصویر اول"></div></figure>
+    <figure><figcaption>تصویر دوم</figcaption><div class="pic" id="picB"><img id="imgB" alt="تصویر دوم"></div></figure>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="acts" id="playActs">
+    <button class="gold" id="bHint">راهنما (بدون امتیاز)</button>
+    <button class="pri" id="bEnd">پایان و دیدن پاسخ‌ها</button>
+    <button class="sec" id="bMenu">فهرست مراحل</button>
+  </div>
+  <div id="result">
+    <h3 id="rTitle"></h3>
+    <div id="rSub" style="color:var(--mute)"></div>
+    <ol id="rList"></ol>
+    <div class="acts">
+      <button class="pri" id="bNext">مرحلهٔ بعد</button>
+      <button class="sec" id="bAgain">دوباره همین مرحله</button>
+      <button class="sec" id="bMenu2">فهرست مراحل</button>
+    </div>
+  </div>
+</section>
+</main>
+<footer>دانش، سرگرمی و رقابت دوستانه در انجمن ایرانیان سوندبی‌بری</footer>
+
+<script>
+{
+const DATA = [{"n": 1, "title": "عمارت باغ ایرانی", "lvl": "easy", "ar": 0.9252, "d": [{"x": 0.2518, "y": 0.2381, "rx": 0.0735, "ry": 0.068, "t": "سرو پشت بام برداشته شده است"}, {"x": 0.1746, "y": 0.4796, "rx": 0.0625, "ry": 0.0578, "t": "رنگ پنجرهٔ طبقهٔ بالا (سمت چپ) عوض شده است"}, {"x": 0.4963, "y": 0.9099, "rx": 0.432, "ry": 0.0935, "t": "رنگ آب استخر تغییر کرده است"}, {"x": 0.4871, "y": 0.6888, "rx": 0.0735, "ry": 0.068, "t": "رنگ در ورودی وسط تغییر کرده است"}, {"x": 0.5515, "y": 0.1701, "rx": 0.0919, "ry": 0.085, "t": "یک تکه ابر برداشته شده است"}]}, {"n": 2, "title": "کودک و توپ فوتبال", "lvl": "easy", "ar": 0.9184, "d": [{"x": 0.4907, "y": 0.6207, "rx": 0.287, "ry": 0.1786, "t": "رنگ پیراهن تغییر کرده است"}, {"x": 0.9074, "y": 0.5476, "rx": 0.0648, "ry": 0.0595, "t": "گل‌های صورتی سمت راست حذف شده‌اند"}, {"x": 0.8704, "y": 0.3401, "rx": 0.0556, "ry": 0.051, "t": "یک گل صورتی تازه در چمن اضافه شده است"}, {"x": 0.6019, "y": 0.5986, "rx": 0.0407, "ry": 0.0374, "t": "دکمهٔ سفید پیراهن حذف شده است"}, {"x": 0.6111, "y": 0.8248, "rx": 0.3241, "ry": 0.1276, "t": "رنگ شلوار تغییر کرده است"}]}, {"n": 3, "title": "تُنگ ماهی قرمز", "lvl": "easy", "ar": 0.9116, "d": [{"x": 0.2705, "y": 0.5697, "rx": 0.1119, "ry": 0.102, "t": "ماهی کوچک رنگ دیگری دارد"}, {"x": 0.4328, "y": 0.6378, "rx": 0.0448, "ry": 0.0408, "t": "چشم ماهی بزرگ پاک شده است"}, {"x": 0.6903, "y": 0.4677, "rx": 0.0746, "ry": 0.068, "t": "گیاه پشت ماهی بزرگ حذف شده است"}, {"x": 0.8955, "y": 0.102, "rx": 0.1026, "ry": 0.0935, "t": "رنگ برگ‌های پس‌زمینه عوض شده است"}, {"x": 0.2388, "y": 0.3656, "rx": 0.084, "ry": 0.0765, "t": "بازتاب سفید روی شیشهٔ تُنگ حذف شده است"}]}, {"n": 4, "title": "انار", "lvl": "easy", "ar": 0.898, "d": [{"x": 0.6667, "y": 0.3197, "rx": 0.0568, "ry": 0.051, "t": "نوک انار نیمه حذف شده است"}, {"x": 0.3125, "y": 0.7568, "rx": 0.0795, "ry": 0.0714, "t": "برگ پایین زرد شده است"}, {"x": 0.8902, "y": 0.9269, "rx": 0.0492, "ry": 0.0442, "t": "یک دانهٔ انار روی میز افتاده است"}, {"x": 0.5606, "y": 0.2551, "rx": 0.0795, "ry": 0.0714, "t": "یک برگ از دستهٔ برگ‌های بالا حذف شده است"}, {"x": 0.303, "y": 0.2381, "rx": 0.0852, "ry": 0.0765, "t": "رنگ تاج انار سمت چپ تغییر کرده است"}]}, {"n": 5, "title": "پرنده روی شاخه", "lvl": "easy", "ar": 0.9252, "d": [{"x": 0.7721, "y": 0.2466, "rx": 0.0441, "ry": 0.0408, "t": "نوک پرنده کوتاه‌تر شده است"}, {"x": 0.3033, "y": 0.8503, "rx": 0.1287, "ry": 0.119, "t": "گل‌های پایین سمت چپ رنگ دیگری دارند"}, {"x": 0.1287, "y": 0.6718, "rx": 0.0919, "ry": 0.085, "t": "رنگ دم پرنده تغییر کرده است"}, {"x": 0.7537, "y": 0.9405, "rx": 0.0772, "ry": 0.0714, "t": "رنگ گل پایین سمت راست تغییر کرده است"}, {"x": 0.9191, "y": 0.4456, "rx": 0.0478, "ry": 0.0442, "t": "غنچهٔ سمت راست حذف شده است"}]}, {"n": 6, "title": "ستون‌های تخت جمشید", "lvl": "mid", "ar": 0.9315, "d": [{"x": 0.2757, "y": 0.0856, "rx": 0.0919, "ry": 0.0856, "t": "ابر بالای سمت چپ حذف شده است"}, {"x": 0.9099, "y": 0.5565, "rx": 0.0772, "ry": 0.0719, "t": "سرستون سمت راست برداشته شده است"}, {"x": 0.1654, "y": 0.4281, "rx": 0.0735, "ry": 0.0685, "t": "یک ابر تازه کنار ستون اضافه شده است"}, {"x": 0.2574, "y": 0.661, "rx": 0.0735, "ry": 0.0685, "t": "بخشی از کوه دوردست حذف شده است"}, {"x": 0.3768, "y": 0.274, "rx": 0.0699, "ry": 0.0651, "t": "نقش سرستون بلند برعکس شده است"}]}, {"n": 7, "title": "بازار سرپوشیده", "lvl": "mid", "ar": 0.9247, "d": [{"x": 0.5296, "y": 0.1712, "rx": 0.0889, "ry": 0.0822, "t": "فانوس آویز سقف حذف شده است"}, {"x": 0.613, "y": 0.8048, "rx": 0.0926, "ry": 0.0856, "t": "رنگ لباس مرد وسط تغییر کرده است"}, {"x": 0.2704, "y": 0.8733, "rx": 0.1019, "ry": 0.0942, "t": "رنگ لباس نفر جلو (چپ) تغییر کرده است"}, {"x": 0.3074, "y": 0.3253, "rx": 0.0519, "ry": 0.0479, "t": "یک پنجرهٔ طاقی بسته شده است"}, {"x": 0.8815, "y": 0.7021, "rx": 0.0556, "ry": 0.0514, "t": "سر نفر سمت راست حذف شده است"}]}, {"n": 8, "title": "گلدان گل", "lvl": "mid", "ar": 0.9178, "d": [{"x": 0.4851, "y": 0.1027, "rx": 0.0709, "ry": 0.0651, "t": "گل صورتی بالا رنگ دیگری دارد"}, {"x": 0.2425, "y": 0.2997, "rx": 0.0709, "ry": 0.0651, "t": "گل سفید سمت چپ حذف شده است"}, {"x": 0.6063, "y": 0.4538, "rx": 0.0597, "ry": 0.0548, "t": "گل زرد وسط آبی شده است"}, {"x": 0.4851, "y": 0.7192, "rx": 0.1026, "ry": 0.0942, "t": "نقش روی گلدان برعکس شده است"}, {"x": 0.8582, "y": 0.2825, "rx": 0.0746, "ry": 0.0685, "t": "گل سمت راست رنگ دیگری دارد"}]}, {"n": 9, "title": "مسجد کاشی‌کاری", "lvl": "mid", "ar": 0.9041, "d": [{"x": 0.2159, "y": 0.2568, "rx": 0.0606, "ry": 0.0548, "t": "نوک منارهٔ سمت چپ برداشته شده است"}, {"x": 0.8977, "y": 0.4795, "rx": 0.0852, "ry": 0.0771, "t": "گنبد کوچک سمت راست رنگ دیگری دارد"}, {"x": 0.8598, "y": 0.1712, "rx": 0.0947, "ry": 0.0856, "t": "ابر سمت راست حذف شده است"}, {"x": 0.1136, "y": 0.8562, "rx": 0.0909, "ry": 0.0822, "t": "گل‌های جلو سمت چپ رنگ دیگری دارند"}, {"x": 0.4432, "y": 0.1164, "rx": 0.0492, "ry": 0.0445, "t": "میلهٔ نوک گنبد بزرگ حذف شده است"}]}, {"n": 10, "title": "سماور و چای", "lvl": "mid", "ar": 0.9315, "d": [{"x": 0.6066, "y": 0.0719, "rx": 0.0551, "ry": 0.0514, "t": "دستگیرهٔ درِ سماور برداشته شده است"}, {"x": 0.386, "y": 0.7192, "rx": 0.0919, "ry": 0.0856, "t": "چای استکان راست کم‌رنگ‌تر شده است"}, {"x": 0.864, "y": 0.3596, "rx": 0.0551, "ry": 0.0514, "t": "دستهٔ راست سماور حذف شده است"}, {"x": 0.3309, "y": 0.1284, "rx": 0.0827, "ry": 0.0771, "t": "رنگ پنجرهٔ پس‌زمینه تغییر کرده است"}, {"x": 0.6066, "y": 0.5137, "rx": 0.0515, "ry": 0.0479, "t": "یک حلقه از پایهٔ سماور حذف شده است"}]}, {"n": 11, "title": "سنگ‌نگارهٔ باستانی", "lvl": "hard", "ar": 1.0543, "d": [{"x": 0.8934, "y": 0.1744, "rx": 0.0735, "ry": 0.0775, "t": "سرستون سمت راست برعکس شده است"}, {"x": 0.2684, "y": 0.0872, "rx": 0.0551, "ry": 0.0581, "t": "بخشی از لبهٔ بالای سنگ حذف شده است"}, {"x": 0.6452, "y": 0.9109, "rx": 0.0404, "ry": 0.0426, "t": "یک لکه روی پای نفر دوم ایجاد شده است"}, {"x": 0.4412, "y": 0.5039, "rx": 0.046, "ry": 0.0484, "t": "بخشی از بال پاک شده است"}, {"x": 0.1654, "y": 0.9109, "rx": 0.0551, "ry": 0.0581, "t": "پای نفر اول برعکس شده است"}]}, {"n": 12, "title": "برج میلاد در شب", "lvl": "hard", "ar": 1.0465, "d": [{"x": 0.8333, "y": 0.2616, "rx": 0.0778, "ry": 0.0814, "t": "نقش‌های ماه برعکس شده است"}, {"x": 0.1574, "y": 0.7171, "rx": 0.0741, "ry": 0.0775, "t": "ساختمان بلند سمت چپ حذف شده است"}, {"x": 0.4444, "y": 0.0775, "rx": 0.0481, "ry": 0.0504, "t": "نوک آنتن برج کوتاه‌تر شده است"}, {"x": 0.1852, "y": 0.2326, "rx": 0.037, "ry": 0.0388, "t": "یک ستاره در آسمان اضافه شده است"}, {"x": 0.7963, "y": 0.7267, "rx": 0.0556, "ry": 0.0581, "t": "ساختمان سمت راست کوتاه‌تر شده است"}]}, {"n": 13, "title": "فرش ایرانی", "lvl": "hard", "ar": 1.0388, "d": [{"x": 0.4832, "y": 0.5426, "rx": 0.0466, "ry": 0.0484, "t": "رنگ مرکز ترنج تغییر کرده است"}, {"x": 0.2425, "y": 0.3101, "rx": 0.0466, "ry": 0.0484, "t": "نقش گوشهٔ بالا چپ برعکس شده است"}, {"x": 0.7836, "y": 0.814, "rx": 0.0448, "ry": 0.0465, "t": "یک نقش پایین راست رنگ دیگری دارد"}, {"x": 0.0746, "y": 0.7364, "rx": 0.041, "ry": 0.0426, "t": "یک نقش حاشیهٔ چپ با نقش دیگری عوض شده است"}, {"x": 0.5597, "y": 0.1744, "rx": 0.0429, "ry": 0.0446, "t": "نقش بالای ترنج رنگ دیگری دارد"}]}, {"n": 14, "title": "روستای برفی", "lvl": "hard", "ar": 1.0233, "d": [{"x": 0.625, "y": 0.3973, "rx": 0.0492, "ry": 0.0504, "t": "دودکش بام حذف شده است"}, {"x": 0.8807, "y": 0.5194, "rx": 0.0455, "ry": 0.0465, "t": "پنجرهٔ زیرشیروانی حذف شده است"}, {"x": 0.5303, "y": 0.7074, "rx": 0.0568, "ry": 0.0581, "t": "رنگ پنجرهٔ پایین تغییر کرده است"}, {"x": 0.4924, "y": 0.1938, "rx": 0.0568, "ry": 0.0581, "t": "یک کاج در کوه اضافه شده است"}, {"x": 0.4167, "y": 0.9109, "rx": 0.0473, "ry": 0.0484, "t": "یک سنگ در برف اضافه شده است"}]}, {"n": 15, "title": "سه‌تار و گل", "lvl": "hard", "ar": 1.0543, "d": [{"x": 0.8676, "y": 0.0426, "rx": 0.0478, "ry": 0.0504, "t": "یکی از گوشی‌های ساز حذف شده است"}, {"x": 0.2059, "y": 0.1938, "rx": 0.0551, "ry": 0.0581, "t": "یک گل بنفش رنگ دیگری دارد"}, {"x": 0.2243, "y": 0.7597, "rx": 0.0368, "ry": 0.0388, "t": "سوراخ صدای ساز پاک شده است"}, {"x": 0.7757, "y": 0.7558, "rx": 0.0772, "ry": 0.0814, "t": "رنگ کاسهٔ پشت ساز تغییر کرده است"}, {"x": 0.7537, "y": 0.3004, "rx": 0.0404, "ry": 0.0426, "t": "یک دستان روی دستهٔ ساز حذف شده است"}]}, {"n": 16, "title": "آسیاب بادی و لاله‌ها", "lvl": "hard", "ar": 1.0462, "d": [{"x": 0.8088, "y": 0.1442, "rx": 0.0643, "ry": 0.0673, "t": "سر یکی از پره‌های آسیاب حذف شده است"}, {"x": 0.5515, "y": 0.4615, "rx": 0.0368, "ry": 0.0385, "t": "پنجرهٔ برج آسیاب حذف شده است"}, {"x": 0.046, "y": 0.9231, "rx": 0.0588, "ry": 0.0615, "t": "یک لالهٔ قرمز زرد شده است"}, {"x": 0.3125, "y": 0.0423, "rx": 0.0643, "ry": 0.0673, "t": "ابر بالای آسمان حذف شده است"}, {"x": 0.3309, "y": 0.5385, "rx": 0.0643, "ry": 0.0673, "t": "رنگ درخت پشت آسیاب تغییر کرده است"}]}, {"n": 17, "title": "خودروی کلاسیک", "lvl": "hard", "ar": 1.0385, "d": [{"x": 0.3815, "y": 0.6731, "rx": 0.0444, "ry": 0.0462, "t": "رنگ چراغ جلو تغییر کرده است"}, {"x": 0.0852, "y": 0.1154, "rx": 0.0741, "ry": 0.0769, "t": "رنگ پنجرهٔ بالا چپ تغییر کرده است"}, {"x": 0.7333, "y": 0.1538, "rx": 0.0778, "ry": 0.0808, "t": "رنگ گل‌های دیوار تغییر کرده است"}, {"x": 0.5481, "y": 0.8077, "rx": 0.0407, "ry": 0.0423, "t": "قالپاق چرخ جلو تغییر کرده است"}, {"x": 0.3259, "y": 0.4231, "rx": 0.0444, "ry": 0.0462, "t": "یک پنجره در ساختمان پوشانده شده است"}]}, {"n": 18, "title": "سفرهٔ هفت‌سین", "lvl": "hard", "ar": 1.0308, "d": [{"x": 0.2425, "y": 0.1635, "rx": 0.1866, "ry": 0.1346, "t": "گل‌های زرد سفید شده‌اند"}, {"x": 0.8022, "y": 0.5577, "rx": 0.0672, "ry": 0.0692, "t": "سبزه برعکس شده است"}, {"x": 0.1399, "y": 0.6154, "rx": 0.0485, "ry": 0.05, "t": "یک سیب حذف شده است"}, {"x": 0.3731, "y": 0.7596, "rx": 0.1026, "ry": 0.0673, "t": "رنگ غذای کاسهٔ وسط تغییر کرده است"}, {"x": 0.4944, "y": 0.375, "rx": 0.0373, "ry": 0.0385, "t": "شعلهٔ شمع حذف شده است"}]}, {"n": 19, "title": "سی‌وسه‌پل", "lvl": "hard", "ar": 1.0154, "d": [{"x": 0.5758, "y": 0.3365, "rx": 0.0492, "ry": 0.05, "t": "یک طاق‌نمای بالای پل پر شده است"}, {"x": 0.1023, "y": 0.2115, "rx": 0.0758, "ry": 0.0769, "t": "ابر سمت چپ حذف شده است"}, {"x": 0.5398, "y": 0.1, "rx": 0.142, "ry": 0.0577, "t": "ابر بالا حذف شده است"}, {"x": 0.3409, "y": 0.7692, "rx": 0.0473, "ry": 0.0481, "t": "یک تکه در بازتاب آب تغییر کرده است"}, {"x": 0.9186, "y": 0.5865, "rx": 0.053, "ry": 0.0538, "t": "تاریکی زیر یک طاق کم شده است"}]}, {"n": 20, "title": "کاشی اسلیمی", "lvl": "hard", "ar": 1.0462, "d": [{"x": 0.4963, "y": 0.2308, "rx": 0.0588, "ry": 0.0615, "t": "گل صورتی بالا رنگ دیگری دارد"}, {"x": 0.8272, "y": 0.5, "rx": 0.0643, "ry": 0.0673, "t": "گل سمت راست برعکس شده است"}, {"x": 0.3401, "y": 0.1442, "rx": 0.0331, "ry": 0.0346, "t": "یک غنچهٔ زرد کوچک حذف شده است"}, {"x": 0.239, "y": 0.7788, "rx": 0.0662, "ry": 0.0692, "t": "گل پایین چپ رنگ دیگری دارد"}, {"x": 0.4963, "y": 0.5577, "rx": 0.0643, "ry": 0.0673, "t": "نقش مرکزی برعکس شده است"}]}];
+const LV = {easy:{name:'سطح آسان',c:'var(--easy)',t:120,stars:1},mid:{name:'سطح متوسط',c:'var(--mid)',t:150,stars:2},hard:{name:'سطح دشوار',c:'var(--hard)',t:180,stars:3}};
+const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const $ = id => document.getElementById(id);
+const KEY = 'anjoman-moamma-v1';
+let best = {};
+try { best = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { best = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(best)); } catch (e) {} };
+if (/claude|artifact/.test(location.hostname)) $('back').style.display = 'none';
+
+function renderMenu() {
+  const groups = ['easy', 'mid', 'hard'];
+  $('bands').innerHTML = groups.map(g => {
+    const items = DATA.filter(d => d.lvl === g);
+    return `<div class="band"><h2 class="bh"><span class="pill" style="background:${LV[g].c}">${LV[g].name}</span>
+      <span style="font-size:14px;color:var(--mute)">مراحل ${fa(items[0].n)} تا ${fa(items[items.length-1].n)} · زمان ${fa(LV[g].t/60)} دقیقه</span></h2>
+      <div class="grid">${items.map(d => {
+        const b = best[d.n];
+        return `<button class="lv${b ? ' done' : ''}" data-n="${d.n}" aria-label="مرحلهٔ ${fa(d.n)}: ${d.title}">
+          <img src="tasvir/${String(d.n).padStart(2,'0')}-t.jpg" alt="" loading="lazy">
+          <span class="cap"><span class="num" style="background:${LV[g].c}">${fa(d.n)}</span><span style="flex:1">${d.title}</span></span>
+          <span class="cap" style="padding-top:0"><span class="st">${b ? 'امتیاز ' + fa(b.s) + ' · ' + fa(b.f) + ' از ۵' : 'بازی نشده'}</span></span>
+        </button>`; }).join('')}</div></div>`;
+  }).join('');
+  const vals = Object.values(best);
+  $('total').textContent = fa(vals.reduce((a, b) => a + b.s, 0));
+  $('doneN').textContent = vals.length ? fa(vals.length) + ' مرحله از ۲۰' : '';
+}
+$('bands').addEventListener('click', e => { const b = e.target.closest('.lv'); if (b) start(+b.dataset.n); });
+
+let cur = null, found = [], wrong = 0, hinted = [], left = 0, timer = null, over = false;
+function start(n) {
+  const d = DATA.find(x => x.n === n); cur = d; found = []; wrong = 0; hinted = []; over = false;
+  const p = String(n).padStart(2, '0');
+  $('imgA').src = `tasvir/${p}-a.jpg`; $('imgB').src = `tasvir/${p}-b.jpg`;
+  document.querySelectorAll('.mk,.x').forEach(m => m.remove());
+  $('gTitle').innerHTML = `<span class="num" style="background:${LV[d.lvl].c};display:inline-grid;vertical-align:middle;margin-inline-end:8px">${fa(n)}</span>${d.title}`;
+  $('menu').style.display = 'none'; $('game').style.display = 'block';
+  $('result').style.display = 'none'; $('playActs').style.display = 'flex';
+  $('toast').textContent = ''; $('toast').className = 'toast';
+  left = LV[d.lvl].t; clearInterval(timer); timer = setInterval(tick, 1000);
+  update(); window.scrollTo({top: 0, behavior: 'smooth'});
+}
+const score = () => Math.max(0, found.filter(i => !hinted.includes(i)).length * 10 - wrong * 2);
+function update() {
+  $('cFound').textContent = `پیدا شده: ${fa(found.length)} از ۵`;
+  const m = Math.floor(left / 60), s = left % 60;
+  $('cTime').textContent = `زمان: ${fa(m)}:${fa(String(s).padStart(2, '0'))}`;
+  $('cTime').classList.toggle('warn', left <= 20);
+  $('cScore').textContent = `امتیاز: ${fa(score())}`;
+}
+function tick() { if (over) return; left--; update(); if (left <= 0) finish('زمان تمام شد!'); }
+
+function mark(i, cls) {
+  const d = cur.d[i];
+  for (const pic of [$('picA'), $('picB')]) {
+    const w = pic.clientWidth, h = pic.clientHeight;
+    const el = document.createElement('div'); el.className = 'mk ' + cls;
+    const rx = Math.max(d.rx * w, 16), ry = Math.max(d.ry * h, 16);
+    el.style.cssText = `right:${(1 - d.x) * 100}%;top:${d.y * 100}%;width:${rx * 2 / w * 100}%;height:${ry * 2 / h * 100}%`;
+    el.style.transform = `translate(50%,-50%)`;
+    if (cls !== 'hint') { const n = document.createElement('span'); n.className = 'n'; n.textContent = fa(i + 1); el.appendChild(n); }
+    pic.appendChild(el);
+    if (cls === 'hint') setTimeout(() => el.remove(), 2200);
+  }
+}
+function hit(e) {
+  if (over || !cur) return;
+  const pic = e.currentTarget, r = pic.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  const mx = 0.035, my = 0.035 * cur.ar;
+  let bestI = -1, bestD = 9;
+  cur.d.forEach((d, i) => {
+    if (found.includes(i)) return;
+    const q = ((x - d.x) / (d.rx + mx)) ** 2 + ((y - d.y) / (d.ry + my)) ** 2;
+    if (q <= 1 && q < bestD) { bestD = q; bestI = i; }
+  });
+  if (bestI >= 0) {
+    found.push(bestI); mark(bestI, 'ok');
+    say(`آفرین! ${cur.d[bestI].t}.`, 'ok');
+    if (found.length === 5) { update(); finish('همهٔ تفاوت‌ها را پیدا کردید!'); return; }
+  } else {
+    const already = cur.d.some((d, i) => found.includes(i) && ((x - d.x) / (d.rx + mx)) ** 2 + ((y - d.y) / (d.ry + my)) ** 2 <= 1);
+    if (already) { say('این تفاوت را قبلاً پیدا کرده‌اید.', ''); return; }
+    wrong++;
+    for (const p of [$('picA'), $('picB')]) {
+      const el = document.createElement('div'); el.className = 'x'; el.textContent = '×';
+      el.style.right = (1 - x) * 100 + '%'; el.style.top = y * 100 + '%'; p.appendChild(el); setTimeout(() => el.remove(), 950);
+    }
+    say('اینجا تفاوتی نیست؛ ۲ امتیاز کم شد.', 'bad');
+  }
+  update();
+}
+$('picA').addEventListener('click', hit); $('picB').addEventListener('click', hit);
+function say(t, c) { $('toast').textContent = t; $('toast').className = 'toast ' + c; }
+
+$('bHint').addEventListener('click', () => {
+  if (over) return;
+  const i = cur.d.findIndex((d, k) => !found.includes(k) && !hinted.includes(k));
+  if (i < 0) { say('راهنمای دیگری نمانده است.', ''); return; }
+  hinted.push(i); mark(i, 'hint'); say('جای یک تفاوت چشمک می‌زند؛ روی آن بزنید (این یکی امتیاز ندارد).', '');
+});
+$('bEnd').addEventListener('click', () => finish('پاسخ‌ها'));
+
+function finish(head) {
+  over = true; clearInterval(timer);
+  cur.d.forEach((d, i) => { if (!found.includes(i)) mark(i, 'miss'); });
+  const s = score(), f = found.length;
+  const prev = best[cur.n];
+  if (!prev || s > prev.s) { best[cur.n] = {s, f}; save(); }
+  $('rTitle').textContent = head;
+  $('rSub').textContent = `شما ${fa(f)} تفاوت از ۵ را پیدا کردید · کلیک اشتباه: ${fa(wrong)} · امتیاز این مرحله: ${fa(s)} از ۵۰` + (prev && prev.s >= s ? ` (بهترین امتیاز قبلی شما: ${fa(prev.s)})` : '');
+  $('rList').innerHTML = cur.d.map((d, i) => `<li><span class="tag ${found.includes(i) ? 'ok' : 'miss'}">${fa(i + 1)} · ${found.includes(i) ? (hinted.includes(i) ? 'با راهنما' : 'پیدا کردید') : 'پیدا نشد'}</span><span>${d.t}</span></li>`).join('');
+  $('playActs').style.display = 'none'; $('result').style.display = 'block';
+  $('bNext').style.display = cur.n < 20 ? '' : 'none';
+  say('', ''); update();
+  $('result').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+}
+const toMenu = () => { clearInterval(timer); over = true; $('game').style.display = 'none'; $('menu').style.display = 'block'; renderMenu(); };
+$('bMenu').addEventListener('click', toMenu); $('bMenu2').addEventListener('click', toMenu);
+$('bAgain').addEventListener('click', () => start(cur.n));
+$('bNext').addEventListener('click', () => start(cur.n + 1));
+renderMenu();
+}
+</script>
+</body>
+</html>
