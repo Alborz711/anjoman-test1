@@ -6,7 +6,7 @@
 <title>پینگ‌پنگ · انجمن ایرانیان سوندبی‌بری</title>
 <meta name="description" content="بازی پینگ‌پنگ با رایانه یا با هموندان انجمن ایرانیان سوندبی‌بری">
 <meta name="theme-color" content="#06080f">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <header class="top">
@@ -17,8 +17,7 @@
 <main id="app"></main>
 <div id="toast" role="status" aria-live="polite"></div>
 <noscript><p style="text-align:center">برای بازی، جاوااسکریپت مرورگر را روشن کنید.</p></noscript>
-<script src="lib/three.min.js"></script>
-<script src="lib/peerjs.min.js"></script>
-<script src="app.js"></script>
+<script type="importmap">{"imports":{"three":"../volleyball/lib/three.module.js"}}</script>
+<script type="module" src="crowd.js?v=2"></script>
 </body>
 </html>

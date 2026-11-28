@@ -595,6 +595,7 @@ function buildArena() {
     mtx.makeTranslation(p[0], p[1] + 0.25, p[2]); bodies.setMatrixAt(j, mtx); col.setHex(pal[j % pal.length]).multiplyScalar(0.5); bodies.setColorAt(j, col);
     mtx.makeTranslation(p[0], p[1] + 0.62, p[2]); heads.setMatrixAt(j, mtx); col.setHex(skin[j % skin.length]).multiplyScalar(0.6); heads.setColorAt(j, col);
   });
+  bodies.visible = heads.visible = false; /* تا تماشاگران واقعی بارگذاری شوند پنهان‌اند */
   sc.add(bodies, heads);
   o.crowd = { bodies: bodies, heads: heads, seats: seats, ph: seats.map(function () { return Math.random() * 6.28; }), on: false };
 
@@ -774,6 +775,16 @@ function updFx(dt) {
     if (r.life <= 0) r.m.visible = false;
   });
   var cr = o.crowd, cheer = G ? G.cheer : 0;
+  /* تماشاگران واقعی؛ آدمک‌های ساده فقط اگر بارگذاری ناموفق باشد */
+  var PC = window.PPCROWD;
+  if (!cr.real && PC && PC.ready) {
+    try {
+      cr.real = PC.build(cr.seats.map(function (p) { return [p[0], p[1], p[2], p[2] < -5 ? 0 : p[0] < 0 ? Math.PI / 2 : -Math.PI / 2]; }), Math.min(innerWidth, innerHeight) < 600);
+      GL.scene.add(cr.real.g);
+    } catch (e) { console.error(e); PC.failed = true; }
+  }
+  if (cr.real) { cr.real.update(GL.t, cheer); return; }
+  cr.bodies.visible = cr.heads.visible = !PC || PC.failed;
   if (cheer > 0 || cr.on) {
     cr.on = cheer > 0;
     var m = new THREE.Matrix4(), a = Math.min(1, cheer);
